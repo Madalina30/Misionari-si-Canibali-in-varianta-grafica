@@ -14,14 +14,7 @@ function App() {
   const [start, setStart] = useState([15, 10])
   const [finish, setFinish] = useState([25,10])
 
-  const [showAlert, setShowAlert] = useState(false)
-  const [showNotATransition, setShowNotATransition] = useState(false)
-  const [showNothingHere, setShowNothingHere] = useState(false)
-  const [showNotEqual, setShowNotEqual] = useState(false)
-
-
-  // const [showAlert, setShowAlert] = useState(false)
-  
+  const [showAlert, setShowAlert] = useState({show:false, message:'', title:'', btnColor:'green', btnText:'OK'})
 
   let isDown = false, moveStart = false, moveEnd = false
 
@@ -122,10 +115,12 @@ function App() {
   return (
     <div className="App">
       <SweetAlert
-        show={showAlert}
-        title="You got eaten!"
-        text="The number of canibals on one side is bigger than the number of missionaries on one of the states! They ate you!"
-        onConfirm={() => setShowAlert(false)}
+        show={showAlert.show}
+        title= {showAlert.title}
+        text={showAlert.message}
+        confirmButtonText={showAlert.btnText}
+        confirmButtonColor={showAlert.btnColor}
+        onConfirm={() => setShowAlert({...showAlert, show:false})}
       />
       <p style={{position:'fixed', bottom:'5px', left:'5px', color:'green', fontWeight:'bold'}}>
         i <FontAwesomeIcon color="green" icon={faArrowAltCircleUp} /> j <FontAwesomeIcon color="green" icon={faArrowAltCircleRight} />
@@ -215,65 +210,84 @@ function App() {
                 <h3 className="transition-label">Tranzitie:</h3>
                 <textarea id="transition" name="transition" rows="2" placeholder="write your transition here" required></textarea>
             </div>
-            <SweetAlert
-              show={showNotATransition}
-              title="Not a transition!"
-              text= "The data introduced is not correct for the transition -> try one the followings: s, initial->((...),(...),..) and all->((...),(...),...)"
-              confirmButtonColor = "red"
-              confirmButtonText = "WILL DO"
-              // imageUrl = "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_960_720.jpg"
-              onConfirm={() => setShowNotATransition(false)}
-            />
-            <SweetAlert
-              show={showNothingHere}
-              title="One of the states is not correct!"
-              text= "A state has the following aspect: ((...),(...),..)!"
-              confirmButtonColor = "green"
-              confirmButtonText = "GOT IT"
-              // imageUrl = "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_960_720.jpg"
-              onConfirm={() => setShowNothingHere(false)}
-            />
-            <SweetAlert
-              show={showNotEqual}
-              title="Equal states!"
-              text= "The states cannot be equal! The second one has to 'come' from the other one!"
-              confirmButtonColor = "blue"
-              confirmButtonText = "GOT IT"
-              // imageUrl = "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_960_720.jpg"
-              onConfirm={() => setShowNotEqual(false)}
-            />
             <input type="button" value="Search" id="submitUserData" onClick={
               (e)=>{
+                constructMC()
                 // will be 3 types of transitions: final, initial->((...),(...),..) and all->((...),(...),...)
                 let state = document.getElementById("stare").value
                 if (state == "()" || state == "" || state == " " || state == "(())" || state == "((),())" || state == "((),(),)"){
                   // SAU DACA EXISTA DEJA WARNINGURI DE CAND SE INTRODUCE STAREA!!!!!!!!!!
-                  setShowNothingHere(true)
+                  setShowAlert({...showAlert, show:true, title:"Nothing here!", message:"One of the states is kinda empty!", btnColor:"red"})
                 } else {
                   state = removePh(state)
-                  verifyState(state, setShowAlert)
+                  let finalState = state.replaceAll("0", "1")
+                  let initialState = state.replaceAll("1", "0")
+
+                  verifyState(state, setShowAlert, showAlert)
                   let transition = document.getElementById("transition").value
                   if (transition == "final") {
                     // verify if possible state -> de la state facuta si sa nu aiba voie sa mearga mai departe!!!!!
+                    // adik animatie pana intr-un punct sau dc nu are unde sa mearga (if possible)
                     // here will make an animation of the steps that are required to get to the final state: ((1,1,...),(1,1,...),1)
+                    while (state != finalState) {
+                      // step by step verification (somehow) + animations
+                      break
+                    }
                     console.log("in final")
                   } else if (transition.includes("initial->")) {
                     let newState = transition.split("->")[1]
                     let value = removePh(newState)
                     if(value == '' || value =="()"){
-                      setShowNothingHere(true)
-                      console.log("nothing here")
+                      setShowAlert({...showAlert, show:true, title:"Nothing here!", message:"One of the states is kinda empty!", btnColor:"red"})
                     } else {
-                      verifyState(value, setShowAlert)
-                      if (state == value) {
-                        setShowNotEqual(true)
-                        console.log("NOT GOOD BRO")
+                      verifyState(value, setShowAlert, showAlert)
+                      let valueLength = value.split(",").length
+                      if (state == finalState){
+                        setShowAlert({...showAlert, show:true, title:"Initial state is final!", message:"Change the initial state! It cannot be final!", btnColor:"orange"} )
+                      } else if (state == value) {
+                        setShowAlert({...showAlert, show:true, title:"Equal states!", message:"Change one of the states!", btnColor:"red"})
+                      } else if (value == initialState) {
+                        // NU POATE FI VALOARE INITIALA - NU SE POATE INTOARCE
+                        setShowAlert({...showAlert, show:true, title:"Final state is initial!", message:"Change the final state! It cannot be initial!", btnColor:"orange"} )
+                      } else if (value.split(",")[valueLength-1] == state.split(",")[valueLength-1]) {
+                        // + sweetalert
+                        setShowAlert({...showAlert, show:true, title:"Boat state unchanged!", message:"The state of the boat remains unchanged even though the positions of the m&c change!", btnColor:"aqua"})
+                      }else if (value.split(",")[valueLength-1] != state.split(",")[valueLength-1]) {
+                        let ok = 0
+                        for (let k = 0; k<valueLength-1; k++) {
+                          if (value.split(",")[k] != state.split(",")[k]) {
+                            ok++;
+                          }
+                        }
+                        if (ok == 0) {
+                          setShowAlert({...showAlert, show:true, title:"Boat state changed!", message:"The state of the boat is changed, the positions of the m&c does not change! You can do better!", btnColor:"red", btnText:"UNDERSTOOD"})
+                        } else if (ok > 2) { // IF THE STATE OF BOAT CHANGE AND SO DOES THE STATE
+                          // DACA SE SCHIMBA DOAR POZITIA VALORILOR, NU PREA AR TREBUI SA CONTEZE! E CA SI CUM NU AR FACE NIMIC!
+                          // TODO: SEE JUST ELEMENTS, NOT POSITIONS!
+                          setShowAlert({...showAlert, show:true, title:"More than 2 changes!", message:"There are detected more than 2 changes on the positions of the m&c! Change them!", btnColor:"orange", btnText:"CHANGING NOW"})
+
+                          console.log("there cannot be more than 2 changes on the states!") // + sweetalert
+                        } else if (ok == 2){ // <=2 changes
+                          setShowAlert({...showAlert, show:true, title:"Good job!", message:"The transition is correct!", btnColor:"green", btnText:"YEY"})
+                          // small animation with boat and transition with the boat remaining where it will go
+                          // BONUS: after that if yes -> the STATE changes and you can make another transition from that one if not final
+                        } else if (ok == 1) { // VERIFICARI AICI!
+                          let boatForNewState = value.split(",")[valueLength-1], boatForState = state.split(",")[valueLength-1]
+                          if (boatForState == 1 && boatForNewState == 0) {
+                            console.log("tranzitie cu o miscare - right to left, dar corecta") // + sweetalert
+                            setShowAlert({...showAlert, show:true, title:"Good job!", message:"The transition is correct!", btnColor:"green", btnText:"YEY"})
+                            // small animation with boat and transition with the boat remaining where it will go
+                            // BONUS: after that if yes -> the STATE changes and you can make another transition from that one if not final
+                          } else if (boatForState == 0 && boatForNewState == 1) {
+                            setShowAlert({...showAlert, show:true, title:"Good, but not worthy!", message:"The transition is correct, but it looks like you just go around the tail!"})
+                            // small animation with boat and transition with the boat remaining where it will go
+                            // BONUS: after that if yes -> the STATE changes and you can make another transition from that one if not final
+                          }
+                         
+                        }
+                        
                       }
-                      
-                      // see if there is possible a transition from the introduced state to the next one
-                      // and if not -> sweet alert -> NOT A POSSIBLE STATE -> IMPOSSIBLE TO GET TO: showNotPossibleTransition
-                      // if yes -> small animation with boat and transition with the boat remaining where it will go
-                      // BONUS: after that if yes -> the STATE changes and you can make another transition from that one
+                    
                     }
                     console.log("in initial static", newState)
                   } else if(transition.includes("all->")){
@@ -281,10 +295,10 @@ function App() {
                     let newState = transition.split("->")[1]
                     let value = removePh(newState)
                     if(value == '' || value =="()"){
-                      setShowNothingHere(true)
-                      console.log("nothing here") // PLUS ALERTA CA NU E NIMIC
+                      setShowAlert({...showAlert, show:true, title:"Nothing here!", message:"One of the states is kinda empty!", btnColor:"red"})
+
                     } else {
-                      verifyState(value, setShowAlert)
+                      verifyState(value, setShowAlert, showAlert)
                       // will verify if such a transition can be made
                       // if not -> sweet alert!! -> showNotAllTransition
                       // if yes -> makes the animation and stops if something goes wrong! and will continue (if no wrong) until final state
@@ -292,7 +306,8 @@ function App() {
                     console.log("in all")
                   }else {
                     // sweet alert -> the data introduced is not correct for the transition ->  try the following
-                    setShowNotATransition(true)
+                    setShowAlert({...showAlert, show:true, title:"Not a transition!", message:"The data introduced is not correct for the transition -> try one the followings: s, initial->((...),(...),..) and all->((...),(...),...)", btnColor:"red", btnText:"WILL DO"})
+
                   }
                 
                 }
@@ -336,7 +351,7 @@ function App() {
   );
 }
 
-function verifyState(value, setShowAlert) {
+function verifyState(value, setShowAlert, showAlert) {
   try{
     let data = value.split("),")
     let misionaries = removePh(data[0]).split(",")
@@ -394,10 +409,14 @@ function verifyState(value, setShowAlert) {
         console.log("nush canibals pe pozitia ", wrongCanibalsPosition)
       }else{
         // check if c>m or not
-        if (leftCanibals > leftMissionaries || rightCanibals > rightMissionaries) {
-          setShowAlert(true)
-        } else {
-          constructMC(misionaries, canibals, boatPosition)
+        if (leftCanibals > leftMissionaries && leftMissionaries != 0) {
+          setShowAlert({...showAlert, show:true, title:"You got eaten!",
+          message:"The number of canibals on one side is bigger than the number of missionaries on one of the states! They ate you!"})
+        } if (rightCanibals > rightMissionaries && rightCanibals != 0){
+          setShowAlert({...showAlert, show:true, title:"You got eaten!",
+          message:"The number of canibals on one side is bigger than the number of missionaries on one of the states! They ate you!"})
+        }else {
+          
           // then put leftm(pink), leftc(blue), rightm(pink), rightc(blue) on their sides
           
         }
@@ -430,12 +449,10 @@ function removePh(v){
   }
 }
 
-function constructMC(misionaries, canibals, boatPosition){
+function constructMC(){
   const rects = document.querySelectorAll('rect');
   let rectMiddle = Math.round(window.innerWidth/60);
   let rectMiddleJ = Math.round(window.innerHeight/60);
-  let misionariesLength = misionaries.length;
-  let canibalsLength  = canibals.length;
   console.log(rectMiddle)
   rects.forEach(rect=>{
       rect.style.fill = "transparent"
