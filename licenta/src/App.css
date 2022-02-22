@@ -1,4 +1,6 @@
-body, #root, .App {
+body,
+#root,
+.App {
   width: 100vw;
   height: 100vh;
 }
@@ -12,24 +14,26 @@ body {
   overflow: hidden;
 }
 
-.start, .start:hover {
+.start,
+.start:hover {
   fill: rgb(37, 185, 104);
 }
 
-.end, .end:hover {
-  fill: red; 
+.end,
+.end:hover {
+  fill: red;
 }
 
 .start-hover {
-  fill: transparent
+  fill: transparent;
 }
 
 .start-hover:hover {
-  fill: green
+  fill: green;
 }
 
 .end-hover {
-  fill: transparent
+  fill: transparent;
 }
 
 .end-hover:hover {
@@ -46,20 +50,25 @@ rect:hover {
   fill: plum;
 }
 
+ul {
+  margin: 0 auto;
+  margin-right: 5px;
+}
+
 /* top left */
 .instructions {
   border-radius: 10px;
   margin: 3px;
   position: absolute;
-  width: 430px;
+  width: 500px;
   background-color: antiquewhite;
   display: flex;
-  text-align: center;
-  align-items: center;
-  justify-content: center;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  /* text-align: center; */
+  /* align-items: center; */
+  /* justify-content: center; */
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   font-size: 13px;
-  padding: 5px;
+  padding: 15px 0px 10px 10px;
 }
 
 /* up menu */
@@ -69,6 +78,7 @@ rect:hover {
   flex-direction: column;
   align-items: center;
   width: 300px;
+  /* right: 0.5%; */
   right: 40%;
   background-color: beige;
   padding: 15px;
@@ -90,7 +100,7 @@ rect:hover {
 }
 
 .select-category__txt {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   font-weight: bold;
   font-size: 20px;
   padding: 5px;
@@ -102,7 +112,7 @@ rect:hover {
 .user-introduce {
   border-radius: 10px;
   position: absolute;
-  top: 20%;
+  top: 30%;
   left: 0px;
   width: 350px;
   height: 350px;
@@ -111,7 +121,7 @@ rect:hover {
   justify-content: center;
 }
 
-.form-model  {
+.form-model {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -122,7 +132,8 @@ h3 {
   margin: 5px;
 }
 
-#stare, #transition {
+#stare,
+#transition {
   width: 300px;
   margin: 0;
   padding: 5px;
@@ -138,15 +149,21 @@ h3 {
   color: white;
 }
 
-.open-close {
+.open-close,
+.open-close-instructions {
   position: absolute;
   left: 0px;
   z-index: 10;
-  top: 20%;
+  top: 30%;
   width: 30px;
   height: 30px;
-  background-color: rgb(112, 77, 30);
+  background-color: rgb(87, 28, 126);
   cursor: pointer;
+}
+
+.open-close-instructions {
+  top: 0;
+  background-color: rgb(112, 77, 30);
 }
 
 /* right choose */
@@ -160,6 +177,14 @@ h3 {
   background-color: rgb(212, 168, 248);
 }
 
+.choose-mode__h1 {
+  text-align: center;
+}
+
+.choosing__form {
+  margin: 15px;
+}
+
 .open-close-menu {
   position: absolute;
   right: 0px;
@@ -167,7 +192,7 @@ h3 {
   z-index: 10;
   width: 30px;
   height: 30px;
-  background-color: rgb(112, 77, 30);
+  background-color: rgb(87, 28, 126);
   cursor: pointer;
 }
 
@@ -176,5 +201,7 @@ h3 {
   border: none;
   border-radius: 5px;
   margin: 5px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
+
+/* 1230 px in jos: pt buttons right:0.4% */

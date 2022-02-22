@@ -11,6 +11,7 @@ function App() {
   const [width, setWidth] = useState(window.innerWidth);
   const [hide, setHide] = useState(1)
   const [hide2, setHide2] = useState(1)
+  const [hide3, setHide3] = useState(1)
   const [start, setStart] = useState([15, 10])
   const [finish, setFinish] = useState([25,10])
 
@@ -167,17 +168,31 @@ function App() {
         })}
       </svg>
       <div className='instructions'>
+         <button className="open-close-instructions" onClick={
+      ()=>{
+        hide3===0?setHide3(1):setHide3(0)
+      }}></button>
       {selectedMod==0?
-        <p>
+        <p style={{display:hide3===0?"none":"block"}}>
            You are in Simple Road mode (default). Here are some instructions:
-           <br/>
-           TO ADD SOME
+           <ul>
+              <li>Start = green, end = red. You can move them around, but the road will be searched from start to end (SEARCH), even diagonally if it is faster;</li>
+              <li>In the center menu, you can find explicit named buttons.</li>
+              <li>You can add walls that will block your faster route, but you can delete them (DELETE WALLS);</li>
+              <li>An animation will appear at search. Also, you can delete the road created (DELETE ROAD);</li>
+              <li>You can reset to default configurations (RESET).</li>
+            </ul>
         </p>
         :
-        <p>
+        <p style={{display:hide3===0?"none":"block"}}>
            You are in M&amp;C mode. Here are some instructions:
-           <br/>
-           TO ADD SOME
+           <ul>
+             <li>Rule: nr of cannibals &lt; nr of missionaries on all sides;</li>
+             <li>You will have to complete the left form;</li>
+             <li>Pattern for State: ((m1, m2, ...), (c1, c2, ...), b), where m1, m2, ... = missionaries, c1, c2, ... = cannibals and b is the state of the boat, each with values {0,1};</li>
+             <li>Pattern for transition (3 options): final,initial-&gt;other_state (same format as before) or all-&gt;...</li>
+             <li>After pressing the Search button, if you entered correct data and the road can be made, you need to wait 5 seconds for the transition to be made.</li>
+           </ul>
         </p>
         }
     </div>
@@ -387,7 +402,8 @@ function App() {
         }
       }></button>
       <div className='user-choose' style={{display:hide2===0?"none":"block"}}>
-        <form>
+        <h1 className='choose-mode__h1'>Choose a mode</h1>
+        <form className='choosing__form'>
           <div>
           <button style={{minHeight:'19px',height:'19px',background:'transparent', border:'none'}} onClick={function(e){
             e.preventDefault();
@@ -397,7 +413,11 @@ function App() {
               console.log("Mod set to", 0)
 
             }
-          }} id="simpleRoad">{selectedMod==0?<><FontAwesomeIcon color="green" icon={faCircleCheck} />Simple Road</>:<p style={{margin:'0',marginLeft:'13.5px'}}>Simple Road</p>}</button>
+          }} id="simpleRoad">{selectedMod==0?
+          <><FontAwesomeIcon color="green" icon={faCircleCheck} />Simple Road
+          
+          </>
+          :<p style={{margin:'0',marginLeft:'13.5px'}}>Simple Road</p>}</button>
        
           </div>
         
@@ -589,7 +609,6 @@ function constructMC(){
         rect.style.fill = "transparent"
       }
      // then put leftm(pink), leftc(blue), rightm(pink), rightc(blue) on their sides
-
 
   })
 }
