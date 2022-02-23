@@ -264,6 +264,7 @@ function App() {
                       let newState = "((";
                       console.log(leftm, leftc, rightm, rightc)
                       let inBoat = [];
+                      let boatPosition = firstBoatPosition
                       let m = [leftm, rightm], c = [leftc, rightc];
                       let moves = 0;
                       // STAREA ESTE (....),(...)... FARA PARANTEZE!
@@ -273,41 +274,260 @@ function App() {
                       if (state == finalState || state == finalState.replace("),1", "),0")){
                           // DOAR O ARATA FINALA SI II SI SPUNE
                           console.log("este finala")
-                      } else if (rightm == 0 && rightc == 0) {
-                        // este intr-o stare initiala IN STG - BOAT POSITION = 0, deci incepe din stg!!!
-                        // alege MC, deci se scade din stg si se pune in drp
-                        m[0]--
-                        m[1]++
-                        c[0]--
-                        c[1]++
-                        firstBoatPosition = 1 - firstBoatPosition
-                        // facem state-ul nou
-                         newState = "SE FACE STATE"
+                      } 
+                      // else if (rightm == 0 && rightc == 0) {
+                      //   // este intr-o stare initiala IN STG - BOAT POSITION = 0, deci incepe din stg!!!
+                      //   // alege MC, deci se scade din stg si se pune in drp
+                      //   inBoat = ['m', 'c']
+                      //   m[0]--
+                      //   m[1]++
+                      //   c[0]--
+                      //   c[1]++
+                      //   boatPosition = 1 - boatPosition
+                      //   // facem state-ul nou
+                      //   newState = `((${new Array(m[0]).fill(m[0]).map(x=>'0').join(',')}${m[1]==0?"":","}${new Array(m[1]).fill(m[1]).map(x=>'1').join(',')}), (${new Array(c[0]).fill(c[0]).map(x=>'0').join(',')},${new Array(c[1]).fill(c[0]).map(x=>'1').join(',')}), ${boatPosition})`
                         
-                        // actualizam state = newState
-                        state = newState
-                          
-                      } else if (leftm == 0 && leftc == 0) {
-                        // ESTE INTR-O STARE IN IN DRP - BOAT PPOSITION = 1, deci incepe din drp!!!
-                        // alege MC, deci se scade din drp si se pune in stg
-                        m[0]++
-                        m[1]--
-                        c[0]++
-                        c[1]--
-                        firstBoatPosition = 1 - firstBoatPosition
-                        // facem state-ul nou
-                        newState = "SE FACE STATE"
-                        // actualizam state = newState
-                        state = newState
-                      } else { // starea nu e initiala, nici finala, deci la mijloc
-                        let moves = 0
-                        while (state != finalState) {
+                      //   // actualizam state = newState
+                      //   state = newState
+                      //   moves++                            
+                      //   console.log("ai trecut la starea: ", state)
 
+                      //   console.log("ai trecut la starea: ", state)
+                      // } else if (leftm == 0 && leftc == 0) {
+                      //   // ESTE INTR-O STARE IN IN DRP - BOAT PPOSITION = 1, deci incepe din drp!!!
+                      //   // alege MC, deci se scade din drp si se pune in stg
+                      //   inBoat = ['m', 'c']
+                      //   m[0]++
+                      //   m[1]--
+                      //   c[0]++
+                      //   c[1]--
+                      //   boatPosition = 1 - boatPosition
+                      //   newState = `((${new Array(m[0]).fill(m[0]).map(x=>'0').join(',')}${m[1]==0?"":","}${new Array(m[1]).fill(m[1]).map(x=>'1').join(',')}), (${new Array(c[0]).fill(c[0]).map(x=>'0').join(',')},${new Array(c[1]).fill(c[0]).map(x=>'1').join(',')}), ${boatPosition})`
+                      //   state = newState
+                      //   moves++      
+                      //   console.log("ai trecut la starea: ", state)
+                      // } // starea nu e initiala, nici finala, deci la mijloc
+                       else {
+                         while (state != finalState || state != finalState.replace("),1", "),0")) {
                           // step by step verification (somehow) + animations
-                          //TOMORROW
-                          break
+                          if(moves == 0){
+                          if(m[0] == c[0] && c[0] != 0){
+                            inBoat = ['m', 'c']
+                            m[0]--
+                            m[1]++
+                            c[0]--
+                            c[1]++
+                            boatPosition = 1 - boatPosition
+                            newState = `((${new Array(m[0]).fill(m[0]).map(x=>'0').join(',')}${m[1]==0?"":","}${new Array(m[1]).fill(m[1]).map(x=>'1').join(',')}), (${new Array(c[0]).fill(c[0]).map(x=>'0').join(',')},${new Array(c[1]).fill(c[0]).map(x=>'1').join(',')}), ${boatPosition})`
+                            state = newState
+                            moves++                            
+                            console.log("ai trecut la starea: ", state)   
+
+                            
+                          }else if(m[0] < c[0] && c[0]>1){ // VERIFY HERE DACA E E MAI MIC CA 2
+                            inBoat = ['c', 'c']
+                            c[0]--
+                            c[1]++
+                            c[0]--
+                            c[1]++
+                            boatPosition = 1 - boatPosition
+                            newState = `((${new Array(m[0]).fill(m[0]).map(x=>'0').join(',')}${m[1]==0?"":","}${new Array(m[1]).fill(m[1]).map(x=>'1').join(',')}), (${new Array(c[0]).fill(c[0]).map(x=>'0').join(',')},${new Array(c[1]).fill(c[0]).map(x=>'1').join(',')}), ${boatPosition})`
+                            state = newState
+                            moves++                            
+                            console.log("ai trecut la starea: ", state)
+
+                          }else if(m[0] > c[0] && m[0] > 1){
+                            inBoat = ['m', 'm']
+                            m[0]--
+                            m[1]++
+                            m[0]--
+                            m[1]++
+                            boatPosition = 1 - boatPosition
+                            newState = `((${new Array(m[0]).fill(m[0]).map(x=>'0').join(',')}${m[1]==0?"":","}${new Array(m[1]).fill(m[1]).map(x=>'1').join(',')}), (${new Array(c[0]).fill(c[0]).map(x=>'0').join(',')},${new Array(c[1]).fill(c[0]).map(x=>'1').join(',')}), ${boatPosition})`
+                            state = newState
+                            moves++                            
+                            console.log("ai trecut la starea: ", state)
+
+                          }
+                      
+                        }else{
+                          if((boatPosition == 0 && firstBoatPosition == 0)|| (boatPosition == 1 && firstBoatPosition == 1)){
+
+                              if(m[0] == c[0]){
+                                  
+                                  if(m[1] == c[1]){
+                                    console.log("die",c, m, boatPosition,1)
+                                    break
+                                  }else if(c[1] < m[1]){
+                                    m[0]--
+                                    m[1]++
+                                    c[0]--
+                                    c[1]++
+                                    inBoat = ['m', 'c']
+                                    boatPosition = 1 - boatPosition
+                                    newState = `((${new Array(m[0]).fill(m[0]).map(x=>'0').join(',')}${m[1]==0?"":","}${new Array(m[1]).fill(m[1]).map(x=>'1').join(',')}), (${new Array(c[0]).fill(c[0]).map(x=>'0').join(',')},${new Array(c[1]).fill(c[0]).map(x=>'1').join(',')}), ${boatPosition})`
+                                    state = newState
+                                    moves++                            
+                                    console.log("ai trecut la starea: ", state)
+
+                                      
+                                  }else if(c[1] > m[1]){
+                                      console.log("die",c, m, boatPosition,3)
+                                      break
+                                  }else{
+                                      console.log("die",c, m, boatPosition,6)
+                                      break
+
+                                  }
+                              }else if(m[0] > c[0]){
+                                  if(m[1] == c[1]){
+                                    if(m[0]-2 > c[0]){
+                                      m[0]--
+                                      m[1]++
+                                      m[0]--
+                                      m[1]++
+                                      inBoat = ['m', 'm']
+                                      boatPosition = 1 - boatPosition
+                                      newState = `((${new Array(m[0]).fill(m[0]).map(x=>'0').join(',')}${m[1]==0?"":","}${new Array(m[1]).fill(m[1]).map(x=>'1').join(',')}), (${new Array(c[0]).fill(c[0]).map(x=>'0').join(',')},${new Array(c[1]).fill(c[0]).map(x=>'1').join(',')}), ${boatPosition})`
+                                      state = newState
+                                      moves++                            
+                                      console.log("ai trecut la starea: ", state)
+
+                                    }else if(m[0] == c[0]){
+                                      m[0]--
+                                      m[1]++
+                                      c[0]--
+                                      c[1]++
+                                      inBoat = ['m', 'c']
+                                      boatPosition = 1 - boatPosition
+                                      newState = `((${new Array(m[0]).fill(m[0]).map(x=>'0').join(',')}${m[1]==0?"":","}${new Array(m[1]).fill(m[1]).map(x=>'1').join(',')}), (${new Array(c[0]).fill(c[0]).map(x=>'0').join(',')},${new Array(c[1]).fill(c[0]).map(x=>'1').join(',')}), ${boatPosition})`
+                                      state = newState
+                                      moves++                            
+                                      console.log("ai trecut la starea: ", state)
+
+                                    }else{
+                                        console.log("die",c, m, boatPosition,4)
+                                        break
+                                    }
+                                  }else if(m[1] > c[1]){
+                                    if(m[0] >= c[0] ){
+                                      m[0]--
+                                      m[1]++
+                                      c[0]--
+                                      c[1]++
+                                      inBoat = ['m', 'c']
+                                      boatPosition = 1 - boatPosition
+                                      newState = `((${new Array(m[0]).fill(m[0]).map(x=>'0').join(',')}${m[1]==0?"":","}${new Array(m[1]).fill(m[1]).map(x=>'1').join(',')}), (${new Array(c[0]).fill(c[0]).map(x=>'0').join(',')},${new Array(c[1]).fill(c[0]).map(x=>'1').join(',')}), ${boatPosition})`
+                                      state = newState
+                                      moves++                            
+                                      console.log("ai trecut la starea: ", state)
+
+                                      }else if(m[0]-2 >= c[0]){
+                                        m[0]--
+                                        m[1]++
+                                        m[0]--
+                                        m[1]++
+                                        inBoat = ['m', 'm']
+                                        boatPosition = 1 - boatPosition
+                                        newState = `((${new Array(m[0]).fill(m[0]).map(x=>'0').join(',')}${m[1]==0?"":","}${new Array(m[1]).fill(m[1]).map(x=>'1').join(',')}), (${new Array(c[0]).fill(c[0]).map(x=>'0').join(',')},${new Array(c[1]).fill(c[0]).map(x=>'1').join(',')}), ${boatPosition})`
+                                        state = newState
+                                        moves++                            
+                                        console.log("ai trecut la starea: ", state)
+
+                                      }else {
+                                        console.log("die",c, m, boatPosition,6)
+                                        break
+                                      }
+                                  }else{
+                                    //cct daca c > m si m != 0
+                                    console.log("die",c, m, boatPosition,7)
+                                    break
+                                  }
+                              }else{
+                                console.log("die",c, m, boatPosition,5)
+                                break
+                              }
+                          }else if((boatPosition == 1 && firstBoatPosition == 0) || (boatPosition == 0 && firstBoatPosition == 0)){
+                              if(m[1]-1 == c[1]){ // TO VERIFY HERE
+                                if(c[0] == m[0]){
+                                  if(c[0]>m[0]+1){
+                                    console.log("die",c, m, boatPosition,1)
+                                    break
+                                  }else if(c[0]< m[0]+1){
+                                    m[1]--
+                                    m[0]++
+                                    inBoat = ['m']
+                                    boatPosition = 1 - boatPosition
+                                    newState = `((${new Array(m[0]).fill(m[0]).map(x=>'0').join(',')}${m[1]==0?"":","}${new Array(m[1]).fill(m[1]).map(x=>'1').join(',')}), (${new Array(c[0]).fill(c[0]).map(x=>'0').join(',')},${new Array(c[1]).fill(c[0]).map(x=>'1').join(',')}), ${boatPosition})`
+                                    state = newState
+                                    moves++                            
+                                    console.log("ai trecut la starea: ", state)
+
+                                  }else{
+                                    console.log("wtf")
+                                  }
+                                }else if(c[0] < m[0]){
+                                  m[1]--
+                                  m[0]++
+                                  boatPosition = 1 - boatPosition
+                                  newState = `((${new Array(m[0]).fill(m[0]).map(x=>'0').join(',')}${m[1]==0?"":","}${new Array(m[1]).fill(m[1]).map(x=>'1').join(',')}), (${new Array(c[0]).fill(c[0]).map(x=>'0').join(',')},${new Array(c[1]).fill(c[0]).map(x=>'1').join(',')}), ${boatPosition})`
+                                  state = newState
+                                  moves++                            
+                                  console.log("ai trecut la starea: ", state)
+
+                                }else if(c[0]>m[0]){
+                                  console.log("die",c, m, boatPosition,2)
+                                  break
+                                }else{
+                                  console.log("wtf")
+                                }
+                              }else if(m[1] == c[1]){
+                                if(m[0] > c[0]){
+                                  if(m[0] == c[0]+1){
+                                    c[1]--
+                                    c[0]++
+                                    boatPosition = 1 - boatPosition
+                                    newState = `((${new Array(m[0]).fill(m[0]).map(x=>'0').join(',')}${m[1]==0?"":","}${new Array(m[1]).fill(m[1]).map(x=>'1').join(',')}), (${new Array(c[0]).fill(c[0]).map(x=>'0').join(',')},${new Array(c[1]).fill(c[0]).map(x=>'1').join(',')}), ${boatPosition})`
+                                    state = newState
+                                    moves++                            
+                                    console.log("ai trecut la starea: ", state)
+
+                                      }else{
+                                        console.log("wtf")
+
+                                      }
+                                  }else if(m[0]==c[0]){
+                                    if(m[1]-1 == 0){
+                                      if(m[0]+1 >= c[0]){
+                                        m[1]--
+                                        m[0]++
+                                        boatPosition = 1 - boatPosition
+                                        newState = `((${new Array(m[0]).fill(m[0]).map(x=>'0').join(',')}${m[1]==0?"":","}${new Array(m[1]).fill(m[1]).map(x=>'1').join(',')}), (${new Array(c[0]).fill(c[0]).map(x=>'0').join(',')},${new Array(c[1]).fill(c[0]).map(x=>'1').join(',')}), ${boatPosition})`
+                                        state = newState
+                                        moves++                            
+                                        console.log("ai trecut la starea: ", state)
+
+                                          }else{
+                                            console.log("die",c, m, boatPosition,3)
+                                            break
+                                          }
+                                      }else{
+                                        console.log("die",c, m, boatPosition,4)
+                                        break
+                                      }
+                                  }else{
+                                    console.log("wtf")
+                                  }
+                              }else{
+                                console.log("wtf")
+                              }
+                          }else{
+                              console.log("wtf")
+                          }
+                      }
                         } // end while
                       }
+                      
                       
                         // so if final state is reached -> message on sweetalert that the road is finished or smth!
                         
