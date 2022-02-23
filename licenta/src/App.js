@@ -261,13 +261,56 @@ function App() {
                   } else {
                     let transition = document.getElementById("transition").value
                     if (transition == "final") {
+                      let newState = "((";
+                      console.log(leftm, leftc, rightm, rightc)
+                      let inBoat = [];
+                      let m = [leftm, rightm], c = [leftc, rightc];
+                      let moves = 0;
+                      // STAREA ESTE (....),(...)... FARA PARANTEZE!
                       // verify if possible state -> de la state facuta si sa nu aiba voie sa mearga mai departe!!!!!
                       // adik animatie pana intr-un punct sau dc nu are unde sa mearga (if possible)
                       // here will make an animation of the steps that are required to get to the final state: ((1,1,...),(1,1,...),1)
-                      while (state != finalState) {
-                        // step by step verification (somehow) + animations
-                        break
+                      if (state == finalState || state == finalState.replace("),1", "),0")){
+                          // DOAR O ARATA FINALA SI II SI SPUNE
+                          console.log("este finala")
+                      } else if (rightm == 0 && rightc == 0) {
+                        // este intr-o stare initiala IN STG - BOAT POSITION = 0, deci incepe din stg!!!
+                        // alege MC, deci se scade din stg si se pune in drp
+                        m[0]--
+                        m[1]++
+                        c[0]--
+                        c[1]++
+                        firstBoatPosition = 1 - firstBoatPosition
+                        // facem state-ul nou
+                         newState = "SE FACE STATE"
+                        
+                        // actualizam state = newState
+                        state = newState
+                          
+                      } else if (leftm == 0 && leftc == 0) {
+                        // ESTE INTR-O STARE IN IN DRP - BOAT PPOSITION = 1, deci incepe din drp!!!
+                        // alege MC, deci se scade din drp si se pune in stg
+                        m[0]++
+                        m[1]--
+                        c[0]++
+                        c[1]--
+                        firstBoatPosition = 1 - firstBoatPosition
+                        // facem state-ul nou
+                        newState = "SE FACE STATE"
+                        // actualizam state = newState
+                        state = newState
+                      } else { // starea nu e initiala, nici finala, deci la mijloc
+                        let moves = 0
+                        while (state != finalState) {
+
+                          // step by step verification (somehow) + animations
+                          //TOMORROW
+                          break
+                        } // end while
                       }
+                      
+                        // so if final state is reached -> message on sweetalert that the road is finished or smth!
+                        
                       console.log("in final")
                     } else if (transition.includes("initial->")) {
                       console.log("aici esti")
@@ -504,7 +547,7 @@ function verifyState(value, setShowAlert, showAlert) {
           setShowAlert({...showAlert, show:true, title:"You got eaten!",
           message:"The number of canibals on one side is bigger than the number of missionaries on one of the states! They ate you!"})
           return [0,0,0,0]
-        } else if (rightCanibals > rightMissionaries && rightCanibals != 0){
+        } else if (rightCanibals > rightMissionaries && rightMissionaries != 0){
           setShowAlert({...showAlert, show:true, title:"You got eaten!",
           message:"The number of canibals on one side is bigger than the number of missionaries on one of the states! They ate you!"})
           return [0,0,0,0]
