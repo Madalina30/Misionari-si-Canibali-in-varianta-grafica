@@ -71,8 +71,14 @@ ul {
   padding: 15px 0px 10px 10px;
 }
 
+.newState {
+  margin: 0 auto;
+  padding: 0 auto;
+}
+
 /* up menu */
-.buttons {
+.buttons,
+#chooseOption {
   position: fixed;
   display: flex;
   flex-direction: column;
@@ -105,7 +111,13 @@ ul {
   font-size: 20px;
   padding: 5px;
   margin: 0;
-  margin-bottom: 5px;
+}
+
+.wait {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 15px;
+  text-align: center;
+  margin: 0;
 }
 
 /* left introduce */

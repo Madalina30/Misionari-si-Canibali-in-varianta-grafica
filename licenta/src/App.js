@@ -14,6 +14,7 @@ function App() {
   const [hide3, setHide3] = useState(1)
   const [start, setStart] = useState([15, 10])
   const [finish, setFinish] = useState([25,10])
+  const [optionChosen, setOptionChosen] = useState(-1)
 
   const [showAlert, setShowAlert] = useState({show:false, message:'', title:'', btnColor:'green', btnText:'OK'})
 
@@ -217,7 +218,9 @@ function App() {
             simpleRoad() // TODO
           }>Search</button>
         </div>
-    </div>:""}
+    </div>:<div id='chooseOption'>
+        <p className="select-category__txt">Your options:</p>
+      </div>}
 
     
 
@@ -250,6 +253,7 @@ function App() {
                   // SAU DACA EXISTA DEJA WARNINGURI DE CAND SE INTRODUCE STAREA!!!!!!!!!!
                   setShowAlert({...showAlert, show:true, title:"Nothing here!", message:"One of the states is kinda empty!", btnColor:"red"})
                 } else {
+                  state = state.split(" ").join("")
                   state = removePh(state)
                   let finalState = state.replaceAll("0", "1")
                   let initialState = state.replaceAll("1", "0")
@@ -261,12 +265,11 @@ function App() {
                   } else {
                     let transition = document.getElementById("transition").value
                     if (transition == "final") {
-                      let newState = "((";
+                      let newState = "(";
                       console.log(leftm, leftc, rightm, rightc)
                       let inBoat = [];
                       let boatPosition = firstBoatPosition
-                      let m = [leftm, rightm], c = [leftc, rightc];
-                      let moves = 0;
+                      let newLeftm = leftm, newLeftc = leftc, newRightm = rightm, newRightc = rightc
                       // STAREA ESTE (....),(...)... FARA PARANTEZE!
                       // verify if possible state -> de la state facuta si sa nu aiba voie sa mearga mai departe!!!!!
                       // adik animatie pana intr-un punct sau dc nu are unde sa mearga (if possible)
@@ -274,267 +277,21 @@ function App() {
                       if (state == finalState || state == finalState.replace("),1", "),0")){
                           // DOAR O ARATA FINALA SI II SI SPUNE
                           console.log("este finala")
-                      } 
-                      // else if (rightm == 0 && rightc == 0) {
-                      //   // este intr-o stare initiala IN STG - BOAT POSITION = 0, deci incepe din stg!!!
-                      //   // alege MC, deci se scade din stg si se pune in drp
-                      //   inBoat = ['m', 'c']
-                      //   m[0]--
-                      //   m[1]++
-                      //   c[0]--
-                      //   c[1]++
-                      //   boatPosition = 1 - boatPosition
-                      //   // facem state-ul nou
-                      //   newState = `((${new Array(m[0]).fill(m[0]).map(x=>'0').join(',')}${m[1]==0?"":","}${new Array(m[1]).fill(m[1]).map(x=>'1').join(',')}), (${new Array(c[0]).fill(c[0]).map(x=>'0').join(',')},${new Array(c[1]).fill(c[0]).map(x=>'1').join(',')}), ${boatPosition})`
-                        
-                      //   // actualizam state = newState
-                      //   state = newState
-                      //   moves++                            
-                      //   console.log("ai trecut la starea: ", state)
-
-                      //   console.log("ai trecut la starea: ", state)
-                      // } else if (leftm == 0 && leftc == 0) {
-                      //   // ESTE INTR-O STARE IN IN DRP - BOAT PPOSITION = 1, deci incepe din drp!!!
-                      //   // alege MC, deci se scade din drp si se pune in stg
-                      //   inBoat = ['m', 'c']
-                      //   m[0]++
-                      //   m[1]--
-                      //   c[0]++
-                      //   c[1]--
-                      //   boatPosition = 1 - boatPosition
-                      //   newState = `((${new Array(m[0]).fill(m[0]).map(x=>'0').join(',')}${m[1]==0?"":","}${new Array(m[1]).fill(m[1]).map(x=>'1').join(',')}), (${new Array(c[0]).fill(c[0]).map(x=>'0').join(',')},${new Array(c[1]).fill(c[0]).map(x=>'1').join(',')}), ${boatPosition})`
-                      //   state = newState
-                      //   moves++      
-                      //   console.log("ai trecut la starea: ", state)
-                      // } // starea nu e initiala, nici finala, deci la mijloc
-                       else {
-                         while (state != finalState || state != finalState.replace("),1", "),0")) {
-                          // step by step verification (somehow) + animations
-                          if(moves == 0){
-                          if(m[0] == c[0] && c[0] != 0){
-                            inBoat = ['m', 'c']
-                            m[0]--
-                            m[1]++
-                            c[0]--
-                            c[1]++
-                            boatPosition = 1 - boatPosition
-                            newState = `((${new Array(m[0]).fill(m[0]).map(x=>'0').join(',')}${m[1]==0?"":","}${new Array(m[1]).fill(m[1]).map(x=>'1').join(',')}), (${new Array(c[0]).fill(c[0]).map(x=>'0').join(',')},${new Array(c[1]).fill(c[0]).map(x=>'1').join(',')}), ${boatPosition})`
-                            state = newState
-                            moves++                            
-                            console.log("ai trecut la starea: ", state)   
-
-                            
-                          }else if(m[0] < c[0] && c[0]>1){ // VERIFY HERE DACA E E MAI MIC CA 2
-                            inBoat = ['c', 'c']
-                            c[0]--
-                            c[1]++
-                            c[0]--
-                            c[1]++
-                            boatPosition = 1 - boatPosition
-                            newState = `((${new Array(m[0]).fill(m[0]).map(x=>'0').join(',')}${m[1]==0?"":","}${new Array(m[1]).fill(m[1]).map(x=>'1').join(',')}), (${new Array(c[0]).fill(c[0]).map(x=>'0').join(',')},${new Array(c[1]).fill(c[0]).map(x=>'1').join(',')}), ${boatPosition})`
-                            state = newState
-                            moves++                            
-                            console.log("ai trecut la starea: ", state)
-
-                          }else if(m[0] > c[0] && m[0] > 1){
-                            inBoat = ['m', 'm']
-                            m[0]--
-                            m[1]++
-                            m[0]--
-                            m[1]++
-                            boatPosition = 1 - boatPosition
-                            newState = `((${new Array(m[0]).fill(m[0]).map(x=>'0').join(',')}${m[1]==0?"":","}${new Array(m[1]).fill(m[1]).map(x=>'1').join(',')}), (${new Array(c[0]).fill(c[0]).map(x=>'0').join(',')},${new Array(c[1]).fill(c[0]).map(x=>'1').join(',')}), ${boatPosition})`
-                            state = newState
-                            moves++                            
-                            console.log("ai trecut la starea: ", state)
-
-                          }
-                      
-                        }else{
-                          if((boatPosition == 0 && firstBoatPosition == 0)|| (boatPosition == 1 && firstBoatPosition == 1)){
-
-                              if(m[0] == c[0]){
-                                  
-                                  if(m[1] == c[1]){
-                                    console.log("die",c, m, boatPosition,1)
-                                    break
-                                  }else if(c[1] < m[1]){
-                                    m[0]--
-                                    m[1]++
-                                    c[0]--
-                                    c[1]++
-                                    inBoat = ['m', 'c']
-                                    boatPosition = 1 - boatPosition
-                                    newState = `((${new Array(m[0]).fill(m[0]).map(x=>'0').join(',')}${m[1]==0?"":","}${new Array(m[1]).fill(m[1]).map(x=>'1').join(',')}), (${new Array(c[0]).fill(c[0]).map(x=>'0').join(',')},${new Array(c[1]).fill(c[0]).map(x=>'1').join(',')}), ${boatPosition})`
-                                    state = newState
-                                    moves++                            
-                                    console.log("ai trecut la starea: ", state)
-
-                                      
-                                  }else if(c[1] > m[1]){
-                                      console.log("die",c, m, boatPosition,3)
-                                      break
-                                  }else{
-                                      console.log("die",c, m, boatPosition,6)
-                                      break
-
-                                  }
-                              }else if(m[0] > c[0]){
-                                  if(m[1] == c[1]){
-                                    if(m[0]-2 > c[0]){
-                                      m[0]--
-                                      m[1]++
-                                      m[0]--
-                                      m[1]++
-                                      inBoat = ['m', 'm']
-                                      boatPosition = 1 - boatPosition
-                                      newState = `((${new Array(m[0]).fill(m[0]).map(x=>'0').join(',')}${m[1]==0?"":","}${new Array(m[1]).fill(m[1]).map(x=>'1').join(',')}), (${new Array(c[0]).fill(c[0]).map(x=>'0').join(',')},${new Array(c[1]).fill(c[0]).map(x=>'1').join(',')}), ${boatPosition})`
-                                      state = newState
-                                      moves++                            
-                                      console.log("ai trecut la starea: ", state)
-
-                                    }else if(m[0] == c[0]){
-                                      m[0]--
-                                      m[1]++
-                                      c[0]--
-                                      c[1]++
-                                      inBoat = ['m', 'c']
-                                      boatPosition = 1 - boatPosition
-                                      newState = `((${new Array(m[0]).fill(m[0]).map(x=>'0').join(',')}${m[1]==0?"":","}${new Array(m[1]).fill(m[1]).map(x=>'1').join(',')}), (${new Array(c[0]).fill(c[0]).map(x=>'0').join(',')},${new Array(c[1]).fill(c[0]).map(x=>'1').join(',')}), ${boatPosition})`
-                                      state = newState
-                                      moves++                            
-                                      console.log("ai trecut la starea: ", state)
-
-                                    }else{
-                                        console.log("die",c, m, boatPosition,4)
-                                        break
-                                    }
-                                  }else if(m[1] > c[1]){
-                                    if(m[0] >= c[0] ){
-                                      m[0]--
-                                      m[1]++
-                                      c[0]--
-                                      c[1]++
-                                      inBoat = ['m', 'c']
-                                      boatPosition = 1 - boatPosition
-                                      newState = `((${new Array(m[0]).fill(m[0]).map(x=>'0').join(',')}${m[1]==0?"":","}${new Array(m[1]).fill(m[1]).map(x=>'1').join(',')}), (${new Array(c[0]).fill(c[0]).map(x=>'0').join(',')},${new Array(c[1]).fill(c[0]).map(x=>'1').join(',')}), ${boatPosition})`
-                                      state = newState
-                                      moves++                            
-                                      console.log("ai trecut la starea: ", state)
-
-                                      }else if(m[0]-2 >= c[0]){
-                                        m[0]--
-                                        m[1]++
-                                        m[0]--
-                                        m[1]++
-                                        inBoat = ['m', 'm']
-                                        boatPosition = 1 - boatPosition
-                                        newState = `((${new Array(m[0]).fill(m[0]).map(x=>'0').join(',')}${m[1]==0?"":","}${new Array(m[1]).fill(m[1]).map(x=>'1').join(',')}), (${new Array(c[0]).fill(c[0]).map(x=>'0').join(',')},${new Array(c[1]).fill(c[0]).map(x=>'1').join(',')}), ${boatPosition})`
-                                        state = newState
-                                        moves++                            
-                                        console.log("ai trecut la starea: ", state)
-
-                                      }else {
-                                        console.log("die",c, m, boatPosition,6)
-                                        break
-                                      }
-                                  }else{
-                                    //cct daca c > m si m != 0
-                                    console.log("die",c, m, boatPosition,7)
-                                    break
-                                  }
-                              }else{
-                                console.log("die",c, m, boatPosition,5)
-                                break
-                              }
-                          }else if((boatPosition == 1 && firstBoatPosition == 0) || (boatPosition == 0 && firstBoatPosition == 0)){
-                              if(m[1]-1 == c[1]){ // TO VERIFY HERE
-                                if(c[0] == m[0]){
-                                  if(c[0]>m[0]+1){
-                                    console.log("die",c, m, boatPosition,1)
-                                    break
-                                  }else if(c[0]< m[0]+1){
-                                    m[1]--
-                                    m[0]++
-                                    inBoat = ['m']
-                                    boatPosition = 1 - boatPosition
-                                    newState = `((${new Array(m[0]).fill(m[0]).map(x=>'0').join(',')}${m[1]==0?"":","}${new Array(m[1]).fill(m[1]).map(x=>'1').join(',')}), (${new Array(c[0]).fill(c[0]).map(x=>'0').join(',')},${new Array(c[1]).fill(c[0]).map(x=>'1').join(',')}), ${boatPosition})`
-                                    state = newState
-                                    moves++                            
-                                    console.log("ai trecut la starea: ", state)
-
-                                  }else{
-                                    console.log("wtf")
-                                  }
-                                }else if(c[0] < m[0]){
-                                  m[1]--
-                                  m[0]++
-                                  boatPosition = 1 - boatPosition
-                                  newState = `((${new Array(m[0]).fill(m[0]).map(x=>'0').join(',')}${m[1]==0?"":","}${new Array(m[1]).fill(m[1]).map(x=>'1').join(',')}), (${new Array(c[0]).fill(c[0]).map(x=>'0').join(',')},${new Array(c[1]).fill(c[0]).map(x=>'1').join(',')}), ${boatPosition})`
-                                  state = newState
-                                  moves++                            
-                                  console.log("ai trecut la starea: ", state)
-
-                                }else if(c[0]>m[0]){
-                                  console.log("die",c, m, boatPosition,2)
-                                  break
-                                }else{
-                                  console.log("wtf")
-                                }
-                              }else if(m[1] == c[1]){
-                                if(m[0] > c[0]){
-                                  if(m[0] == c[0]+1){
-                                    c[1]--
-                                    c[0]++
-                                    boatPosition = 1 - boatPosition
-                                    newState = `((${new Array(m[0]).fill(m[0]).map(x=>'0').join(',')}${m[1]==0?"":","}${new Array(m[1]).fill(m[1]).map(x=>'1').join(',')}), (${new Array(c[0]).fill(c[0]).map(x=>'0').join(',')},${new Array(c[1]).fill(c[0]).map(x=>'1').join(',')}), ${boatPosition})`
-                                    state = newState
-                                    moves++                            
-                                    console.log("ai trecut la starea: ", state)
-
-                                      }else{
-                                        console.log("wtf")
-
-                                      }
-                                  }else if(m[0]==c[0]){
-                                    if(m[1]-1 == 0){
-                                      if(m[0]+1 >= c[0]){
-                                        m[1]--
-                                        m[0]++
-                                        boatPosition = 1 - boatPosition
-                                        newState = `((${new Array(m[0]).fill(m[0]).map(x=>'0').join(',')}${m[1]==0?"":","}${new Array(m[1]).fill(m[1]).map(x=>'1').join(',')}), (${new Array(c[0]).fill(c[0]).map(x=>'0').join(',')},${new Array(c[1]).fill(c[0]).map(x=>'1').join(',')}), ${boatPosition})`
-                                        state = newState
-                                        moves++                            
-                                        console.log("ai trecut la starea: ", state)
-
-                                          }else{
-                                            console.log("die",c, m, boatPosition,3)
-                                            break
-                                          }
-                                      }else{
-                                        console.log("die",c, m, boatPosition,4)
-                                        break
-                                      }
-                                  }else{
-                                    console.log("wtf")
-                                  }
-                              }else{
-                                console.log("wtf")
-                              }
-                          }else{
-                              console.log("wtf")
-                          }
+                      } else {
+                        let move = 0;
+                        console.log("From state ", state, ":\n")
+                        // DOAR PT 3
+                        while (state != finalState || state != finalState.replace("),1", "),0") ) {
+                          // TODO GENERAL, WITH DIFFERENT PARAMETERS
+                          
+                          break
+                        }  // end while
                       }
-                        } // end while
-                      }
-                      
-                      
                         // so if final state is reached -> message on sweetalert that the road is finished or smth!
-                        
                       console.log("in final")
                     } else if (transition.includes("initial->")) {
                       console.log("aici esti")
-                      let newState = transition.split("->")[1]
+                      let newState = transition.split("->")[1].split(" ").join("")
                       let value = removePh(newState)
                       if(value == '' || value =="()"){
                         setShowAlert({...showAlert, show:true, title:"Nothing here!", message:"One of the states is kinda empty!", btnColor:"red"})
@@ -583,24 +340,21 @@ function App() {
                                   setShowAlert({...showAlert, show:true, title:"More than 2 changes!", message:"There are detected more than 2 changes on the positions of the m&c! Change them!", btnColor:"orange", btnText:"CHANGING NOW"})
                                 }
                               } else if (ok == 2){ // <=2 changes
-                                //ANIMATION
-                                // PRIMA PARTE A ANIMATIEI
+                                document.querySelectorAll('rect').forEach(rect=>{
+                                                  rect.parentNode.children[1].innerHTML = ""
+                                                })
                                 showMC(leftc, leftm, rightc, rightm)
                                 setTimeout(()=>{
-                                  // PART 2 ANIMATION
-                                // MAI INTAI STERGE  CE TREBUIE!
                                   document.querySelectorAll('rect').forEach(rect=>{
                                     rect.parentNode.children[1].innerHTML = ""
                                   })
                                   showMC(leftcV, leftmV, rightcV, rightmV)
                                 }, 5000)
-                                
-                                
 
                                 setShowAlert({...showAlert, show:true, title:"Good job!", message:"The transition is correct!", btnColor:"green", btnText:"YEY"})
                                 // small animation with boat and transition with the boat remaining where it will go
                                 // BONUS: after that if yes -> the STATE changes and you can make another transition from that one if not final
-                              } else if (ok == 1) { // VERIFICARI AICI!
+                              } else if (ok == 1) { // TODO: VERIFICARI AICI!!!!!
                                 let boatForNewState = value.split(",")[valueLength-1], boatForState = state.split(",")[valueLength-1]
                                 if (boatForState == 1 && boatForNewState == 0) {
                                   console.log("tranzitie cu o miscare - right to left, dar corecta") // + sweetalert
@@ -625,32 +379,483 @@ function App() {
                       console.log("in initial static", newState)
                     } else if(transition.includes("all->")){
                       // will search if the composition of the state is correct - FIRST
-                      let newState = transition.split("->")[1]
-                      let value = removePh(newState)
-                      if(value == '' || value =="()"){
+                      let states = transition.split("->")
+                      let baseState = states[1].split(" ").join("")
+                      let nextState = states[2].split(" ").join("")
+                      baseState = removePh(baseState)
+                      nextState = removePh(nextState)
+                      console.log(baseState, "\n", nextState)
+                      // VERIFY IF THE STATES HAVE THE SAME LENGTH AS THE ONE GIVEN AS STATE
+                      console.log("after split: ", baseState.split(",").length, baseState.split(","), " and the state has ", state.split(",").length)
+                      if(baseState == '' || baseState =="()" || nextState == '' || nextState =="()"){
                         setShowAlert({...showAlert, show:true, title:"Nothing here!", message:"One of the states is kinda empty!", btnColor:"red"})
-
                       } else {
-                        let [leftm, rightm, leftc, rightc] = verifyState(value, setShowAlert, showAlert)
-                        let lastBoatPosition = value.split("),")[2]
+                        let vectBaseState = baseState.split(","), vectState = state.split(","), vectNextState = nextState.split(",")
+                        if (vectBaseState.length == vectState.length && vectBaseState.length == vectNextState.length) {
+                          if (vectBaseState[0].includes("(") && vectBaseState[leftm+rightm-1].includes(")") && vectBaseState[leftm+rightm].includes("(") 
+                          && vectBaseState[leftm+rightm+leftc+rightc-1].includes(")") && vectBaseState[vectBaseState.length-1] == "b"
+                          && vectNextState[0].includes("(") && vectNextState[leftm+rightm-1].includes(")") && vectNextState[leftm+rightm].includes("(") 
+                          && vectNextState[leftm+rightm+leftc+rightc-1].includes(")") && vectNextState[vectNextState.length-1].includes("b")) {
+                            console.log("STARI OK YEY")
+                            // verify the boat
+                            if (vectBaseState[vectBaseState.length-1] == vectNextState[vectNextState.length-1]) {
+                              setShowAlert({...showAlert, show:true, title:"Boat state unchanged!", message:"The state of the boat remains unchanged even though the positions of the m&c change!", btnColor:"aqua", btnText:'OK'})
+                            } else {
+                              let diffComponents = 0
+                              let countPM = 0
+                              let sameNameOperations = 0, operationsVect = [], differentOperationsMinuses = [], differentOperationsPluses = []
+                              for (let i = 0; i < vectBaseState.length - 1; i++) {
+                                if (vectBaseState[i].length != vectNextState[i].length) {
+                                  // a modification appears
+                                  // verify if there is a +/- sign and the names are the same!
+                                  if ((vectNextState[i].includes("+") || vectNextState[i].includes("-"))) {
+                                    countPM++
+                                    if (vectNextState[i].includes("+")) {
+                                      differentOperationsPluses.push(vectNextState[i])
+                                    } else  if (vectNextState[i].includes("-")){
+                                      differentOperationsMinuses.push(vectNextState[i])
+                                    }
+                                    if((vectBaseState[i].length == vectNextState[i].length - 2 && vectNextState[i].includes(vectBaseState[i]))
+                                    || (vectNextState[i].includes(")") && vectBaseState[i].length == vectNextState[i].length - 2)) {
+                                      // name is the same!! operations possible - SECOND CASE
+                                      sameNameOperations++
+                                      operationsVect.push(vectNextState[i])
+                                      // also verify if the component from position leftm+rightm-1 is the same, bc is different
+                                      // HERE VERIFY IF A NAME DIFFER!
+                                    }
+                                  }  else if (vectNextState[i].includes(vectBaseState[i]) && vectBaseState[i].length != vectNextState[i].length) {
+                                    // names are different, no + or - signs - FIRST CASE
+                                    diffComponents++
+                                  } else if (!vectNextState[i].includes(vectBaseState[i])) {
+                                    // names are totally different, but no +- signs - FIRST CASE TOO
+                                    diffComponents++
+                                  } else {
+                                    //nothing
+                                  }
+                                  // verify if the components names are different, but there is no + or - sign
+                                }
+                              } // end for
+                              let countTheSame = 0
+                              if (differentOperationsPluses.length == differentOperationsPluses.length && (differentOperationsMinuses.length + differentOperationsPluses.length) == countPM) {
+                                for (let i = 0; i < differentOperationsPluses.length; i++) {
+                                  if (differentOperationsPluses[i].includes("(")) {
+                                    differentOperationsPluses[i] = differentOperationsPluses[i].replace("(", "")
+                                  } else if (differentOperationsPluses[i].includes(")")) {
+                                    differentOperationsPluses[i] = differentOperationsPluses[i].replace(")", "")
+                                  } else if (differentOperationsMinuses[i].includes("(")) {
+                                    differentOperationsMinuses[i] = differentOperationsMinuses[i].replace("(", "")
+                                  } else if (differentOperationsMinuses[i].includes(")")) {
+                                    differentOperationsMinuses[i] = differentOperationsMinuses[i].replace(")", "")
+                                  }
+                                }
+                                for (let i = 0; i < differentOperationsMinuses.length;  i++) {
+                                  for (let j = 0; j < differentOperationsPluses.length; j++) {
+                                    if ((differentOperationsMinuses[i].includes("m") && differentOperationsPluses[j].includes("m"))
+                                    ||(differentOperationsMinuses[i].includes("c") && differentOperationsPluses[j].includes("c")) ) {
+                                      if (differentOperationsPluses[j].split("+")[1] == differentOperationsMinuses[i].split("-")[1]) {
+                                        countTheSame ++
+                                      }
+                                    }
+                                  }
+                                  
+                                }
+                              }
+                              
+                              
+                              let plusesToSumM = [], plusesToSumC = [], minusesToSumM = [], minusesToSumC = []
+                              if ((sameNameOperations == 0 || countTheSame == 2) && diffComponents != 0) {
+                                document.getElementById("chooseOption").innerHTML = `<p className="select-category__txt">Your options:</p>`
+                                // FIRST CASE HERE - no = or - here OR M1+V1, ETC
+                                // appear buttons for states to choose from! it is written if ok or not!
+                                    // the start state is put on the screen
+                                    // if press on the wrong one, an animation is done and after 1 sec the 'game' is over and buttons dissapear
+                                    // else -> animation for the state chosen -> wait 1 sec and it will change on the screen like initial->
+                                    // and then it goes again in the while for dif components and search for next states
+                                    // BUTTON FOR END STATE, THE SEARCH BUTTON FROM LEFT IS INACTIVE UNTIL THE GAME ENDS OR THE BUTTON FOR END STATE IS PRESSED
+                                  // 
+                                // MAKE SEARCH BUTTON INACTIVE
+                                let searchBtn = document.getElementById("submitUserData")
+                                searchBtn.style.background = "#9a9da1"
+                                // searchBtn.disabled = true
+                                
+                                console.log("diff components nr", diffComponents)
+                                let stateToChange = state, boatPos = firstBoatPosition
+                                // see finalstate if differ
+                                let allLeftc = leftc, allLeftm = leftm, allRightc = rightc, allRightm = rightm
+                                // prima stare e deja verificata
+                                // MOMENTAN SE INCEPE DOAR CU 0!
+                                let inBoatAll = [], options = [], vals = [], okOrNot
+                                while (stateToChange != finalState) {
+                                  if ((boatPos == 0 && firstBoatPosition == 0)) { // || (boatPos == 1 && firstBoatPosition == 1)
+                                    // daca e in cea din care porneste
+                                    if (stateToChange == initialState) {
+                                      if ((allLeftc + allRightc) == 1) {
+                                        inBoatAll = ['M', 'C']
+                                        boatPos = 1 - boatPos;
+                                        options = [finalState]
+                                        vals = [1] // 1 is ok
+                                        okOrNot = makeButton(options, vals, optionChosen, setOptionChosen)
+                                        // make button with this option
+                                        // if a button is pressed -> do animation
+                                        // then see if the option is ok!
+                                        // break if final state!
+                                        break
+                                      } else {
+                                        // 3 options: MM, MC, CC
+                                        inBoatAll = [['M', 'C'], ['M', 'M'], ['C', 'C']]
+                                        boatPos = 1 - boatPos;
+                                        [options, vals] = searchForOptions(inBoatAll, allLeftc, allLeftm, allRightc, allRightm, boatPos)
+                                        options.forEach(element=>{
+                                          console.log("("+element+")")
+                                        })
+                                        makeButton(options, vals, optionChosen, setOptionChosen)
+                                        // if (okOrNot) { //true
+                                        //   continue
+                                        // } else {
+                                        //   console.log("pus alerta nu e ok")
+                                        //   // activate search button
+                                        //   break
+                                        // }
+                                        break
+                                      }
+                                    } else { // if not initial state
+                                      if (allLeftc >= 2) {
+                                        if (allLeftm >=2) {
+                                          // 3 options: MM, MC, CC
+                                          inBoatAll = [['M', 'C'], ['M', 'M'], ['C', 'C']]
+                                          boatPos = 1 - boatPos;
+                                          [options, vals] = searchForOptions(inBoatAll, allLeftc, allLeftm, allRightc, allRightm, boatPos)
+                                          options.forEach(element=>{
+                                            console.log("("+element+")")
+                                          })
+                                          break
+                                          // se fac butoane pt options
+                                          // see which one is pressed -> make animation
+                                          // then verify if is eaten or final state(break)!
+                                          // if not, do nothing! just continue
+                                        } else if (allLeftm == 1) {
+                                          inBoatAll = [['M', 'C'], ['C', 'C']]
+                                          boatPos = 1 - boatPos;
+                                          [options, vals] = searchForOptions(inBoatAll, allLeftc, allLeftm, allRightc, allRightm, boatPos)
+                                          options.forEach(element=>{
+                                            console.log("("+element+")")
+                                          })
+                                          break
+                                          // se fac butoane pt options
+                                          // see which one is pressed -> make animation
+                                          // then verify if is eaten or final state(break)!
+                                          // if not, do nothing! just continue
+                                        } else { //lm=0
+                                          inBoatAll = [['C', 'C']]
+                                          boatPos = 1 - boatPos;
+                                          [options, vals] = searchForOptions(inBoatAll, allLeftc, allLeftm, allRightc, allRightm, boatPos)
+                                          options.forEach(element=>{
+                                            console.log("("+element+")")
+                                          })
+                                          break
+                                          // se fac butoane pt options
+                                          // see which one is pressed -> make animation
+                                          // then verify if is eaten or final state(break)!
+                                          // if not, do nothing! just continue
+                                        }
+                                      } else if (allLeftc == 1) {
+                                        if (allLeftm >= 2) {
+                                          inBoatAll = [['M', 'C'], ['M', 'M']]
+                                          boatPos = 1 - boatPos;
+                                          [options, vals] = searchForOptions(inBoatAll, allLeftc, allLeftm, allRightc, allRightm, boatPos)
+                                          options.forEach(element=>{
+                                            console.log("("+element+")")
+                                          })
+                                          break
+                                          // se fac butoane pt options
+                                          // see which one is pressed -> make animation
+                                          // then verify if is eaten or final state(break)!
+                                          // if not, do nothing! just continue
+                                        } else if (allLeftm == 1){
+                                          inBoatAll = [['M', 'C']]
+                                          boatPos = 1 - boatPos;
+                                          [options, vals] = searchForOptions(inBoatAll, allLeftc, allLeftm, allRightc, allRightm, boatPos)
+                                          options.forEach(element=>{
+                                            console.log("("+element+")")
+                                          })
+                                          break
+                                          // se fac butoane pt options
+                                          // see which one is pressed -> make animation
+                                          // then verify if is eaten or final state(break)!
+                                          // if not, do nothing! just continue
+                                        } else { //lm=0
+                                          console.log("NOT OK!")
+                                          setShowAlert({...showAlert, show:true, title:"Not ok!", message:"Not ok - todo!", btnColor:"aqua", btnText:'OK'})
 
-                        if (!leftm && !rightm && !leftc && !rightc) {
-                          // do nothing
+                                          break
+                                          // mesaj game over + search button activate
+                                        }
+                                      } else {
+                                        console.log("nothin here")
+                                        break
+                                      }
+                                    }
+                                  } else {
+                                    // daca e in cea in care e prezenta starea finala!
+                                    if (allRightc >= 2) {
+                                      if (allRightm >= 2) {
+                                        inBoatAll = [['M', 'M'],['M', 'C'],['C', 'C'],['M'],['C']]
+                                        boatPos = 1 - boatPos;
+                                        [options, vals] = searchForOptionsReverse(inBoatAll, allLeftc, allLeftm, allRightc, allRightm, boatPos)
+                                        options.forEach(element=>{
+                                          console.log("("+element+")")
+                                        })
+                                        break
+                                        // se fac butoane pt options
+                                        // see which one is pressed -> make animation
+                                        // then verify if is eaten or final state(break)!
+                                        // if not, do nothing! just continue
+                                      } else if (allRightm == 1) {
+                                        inBoatAll = [['M', 'C'],['C', 'C'],['M'],['C']]
+                                        boatPos = 1 - boatPos;
+                                        [options, vals] = searchForOptionsReverse(inBoatAll, allLeftc, allLeftm, allRightc, allRightm, boatPos)
+                                        options.forEach(element=>{
+                                          console.log("("+element+")")
+                                        })
+                                        break
+                                        // se fac butoane pt options
+                                        // see which one is pressed -> make animation
+                                        // then verify if is eaten or final state(break)!
+                                        // if not, do nothing! just continue
+                                      } else {
+                                        inBoatAll = [['C', 'C'],['C']]
+                                        boatPos = 1 - boatPos;
+                                        [options, vals] = searchForOptionsReverse(inBoatAll, allLeftc, allLeftm, allRightc, allRightm, boatPos)
+                                        options.forEach(element=>{
+                                          console.log("("+element+")")
+                                        })
+                                        break
+                                        // se fac butoane pt options
+                                        // see which one is pressed -> make animation
+                                        // then verify if is eaten or final state(break)!
+                                        // if not, do nothing! just continue
+                                      }
+                                    } else if (allRightc == 1) {
+                                      if (allRightm >= 2) {
+                                        inBoatAll = [['M', 'M'],['M', 'C'],['M'],['C']]
+                                        boatPos = 1 - boatPos;
+                                        [options, vals] = searchForOptionsReverse(inBoatAll, allLeftc, allLeftm, allRightc, allRightm, boatPos)
+                                        options.forEach(element=>{
+                                          console.log("("+element+")")
+                                        })
+                                        break
+                                        // se fac butoane pt options
+                                        // see which one is pressed -> make animation
+                                        // then verify if is eaten or final state(break)!
+                                        // if not, do nothing! just continue
+                                      } else if (allRightm == 1) {
+                                        inBoatAll = [['M', 'C'],['M'],['C']]
+                                        boatPos = 1 - boatPos;
+                                        [options, vals] = searchForOptionsReverse(inBoatAll, allLeftc, allLeftm, allRightc, allRightm, boatPos)
+                                        options.forEach(element=>{
+                                          console.log("("+element+")")
+                                        })
+                                        break
+                                        // se fac butoane pt options
+                                        // see which one is pressed -> make animation
+                                        // then verify if is eaten or final state(break)!
+                                        // if not, do nothing! just continue
+                                      } else { //rm=0
+                                        inBoatAll = [['C']]
+                                        boatPos = 1 - boatPos;
+                                        [options, vals] = searchForOptionsReverse(inBoatAll, allLeftc, allLeftm, allRightc, allRightm, boatPos)
+                                        options.forEach(element=>{
+                                          console.log("("+element+")")
+                                        })
+                                        break
+                                        // se fac butoane pt options
+                                        // see which one is pressed -> make animation
+                                        // then verify if is eaten or final state(break)!
+                                        // if not, do nothing! just continue
+                                      }
+                                    } else { // rc=0
+                                      if (allRightm >= 2) {
+                                        inBoatAll = [['M', 'M'],['M']]
+                                        boatPos = 1 - boatPos;
+                                        [options, vals] = searchForOptionsReverse(inBoatAll, allLeftc, allLeftm, allRightc, allRightm, boatPos)
+                                        options.forEach(element=>{
+                                          console.log("("+element+")")
+                                        })
+                                        break
+                                        // se fac butoane pt options
+                                        // see which one is pressed -> make animation
+                                        // then verify if is eaten or final state(break)!
+                                        // if not, do nothing! just continue
+                                      } else if (allRightm == 1) {
+                                        inBoatAll = [['M']]
+                                        boatPos = 1 - boatPos;
+                                        [options, vals] = searchForOptionsReverse(inBoatAll, allLeftc, allLeftm, allRightc, allRightm, boatPos)
+                                        options.forEach(element=>{
+                                          console.log("("+element+")")
+                                        })
+                                        break
+                                        // se fac butoane pt options
+                                        // see which one is pressed -> make animation
+                                        // then verify if is eaten or final state(break)!
+                                        // if not, do nothing! just continue
+                                      } else {
+                                        console.log("NOTHING HERE - MAYBE FINAL STATE")
+                                        break
+                                      }
+                                    }
+
+                                  }
+                                }
+                                  
+                              } else {
+                                document.getElementById("chooseOption").innerHTML = `<p class="select-category__txt">The next state:</p>`
+                                // SECOND CASE HERE - some operations that need to be verified!
+                                // 2) verify if there are the same components - names, then verify if the +-es <= 2!
+                                // while!!!1
+                                  // 2.1) if not ok -> just a message on the screen, not buttons appearing
+                                  // 2.2) ELSE buttons appear for states to choose from (even if there is just one)
+                                  // and a button for end transition, and search button is inactive until the other one is pressed
+                                  // if ok -> make animation and other button for state will appear!
+                                // 3) see if there are any other options available!
+                                let countPlus = 0, countMinus = 0
+                                for (let i = 0; i < operationsVect.length; i++) {
+                                  if (operationsVect[i].includes("+")) {
+                                    countPlus++
+                                    if (operationsVect[i].includes("m")) {
+                                      plusesToSumM.push(parseInt(operationsVect[i].split("+")[1]))
+                                    } else {
+                                      plusesToSumC.push(parseInt(operationsVect[i].split("+")[1]))
+                                    }
+                                    if (operationsVect[i].includes(")")) {
+                                      operationsVect[i] = operationsVect[i].replace(")", "")
+                                    } else if (operationsVect[i].includes("(") ){
+                                      operationsVect[i] = operationsVect[i].replace("(", "")
+                                    }
+                                  } else if (operationsVect[i].includes("-")){
+                                    countMinus++
+                                    if (operationsVect[i].includes("m")) {
+                                      minusesToSumM.push(parseInt(operationsVect[i].split("-")[1]))
+                                    } else {
+                                      minusesToSumC.push(parseInt(operationsVect[i].split("-")[1]))
+                                    }
+                                    if (operationsVect[i].includes(")")) {
+                                      operationsVect[i] = operationsVect[i].replace(")", "")
+                                    } else if (operationsVect[i].includes("(") ){
+                                      operationsVect[i] = operationsVect[i].replace("(", "")
+                                    }
+                                  } 
+                                } // end for
+
+                                console.log("+:", countPlus, "-:", countMinus, "\n", operationsVect)
+                                if (countPM != (countPlus + countMinus)) {
+                                  console.log("not ok here-> diff elements combined with same ones!")
+                                  setShowAlert({...showAlert, show:true, title:"Not ok!", message:"You combined 2 modes! Look at the instructions again!", btnColor:"red", btnText:'OK'})
+                                } else {
+                                  let pSumM = plusesToSumM.reduce(function(a, b){
+                                                          return a + b;
+                                                      }, 0)
+                                  let pSumC = plusesToSumC.reduce(function(a, b){
+                                                          return a + b;
+                                                      }, 0)
+                                  let mSumM = minusesToSumM.reduce(function(a, b){
+                                                          return a + b;
+                                                      }, 0)
+                                  let mSumC = minusesToSumC.reduce(function(a, b){
+                                                          return a + b;
+                                                      }, 0)
+                                  if (pSumM+pSumC <= 2) {
+                                    if (pSumM+pSumC == mSumM+mSumC) {
+                                      if (pSumC == mSumC && pSumM == mSumM) {
+                                        // WORKS JUST WITH THE NEXT STATE! LIKE IN INITIAL!
+                                        console.log("plusessumc: ", pSumC, " plusessumm: ", pSumM, " minusessumc: ", mSumC, " minusessumm: ", mSumM)
+                                        console.log("leftc: ", leftc, " leftm: ", leftm, " rightc: ", rightc, " rightm: ", rightm)
+                                        let hereInBoat = [], newState = state
+                                        if (firstBoatPosition == 0) { // incepe de la 0
+                                          if (leftm < mSumM || leftc < mSumC) {
+                                            setShowAlert({...showAlert, show:true, title:"Not ok!", message:"The - sign on m or c is too big!", btnColor:"red", btnText:'OK'})
+                                          } else {
+                                            if (leftc - mSumC > leftm - mSumM || rightc + pSumC > rightm + pSumM) {
+                                              setShowAlert({...showAlert, show:true, title:"You got eaten!",
+                                              message:"The number of canibals on one side is bigger than the number of missionaries on one of the states! They ate you!", btnColor:"red", btnText:'OK'})
+                                            } else {
+                                              newState = constructOption(leftc - mSumC, leftm - mSumM, rightc + pSumC, rightm + pSumM, 1-firstBoatPosition)
+                                              console.log("NEW STATE: ", newState)
+                                              document.getElementById("chooseOption").innerHTML += `<p class="wait">${newState}</p><p class="wait">Wait 5 seconds for the animation to complete.`
+                                              // ANIMATION AS IN INITIAL->
+                                              document.querySelectorAll('rect').forEach(rect=>{
+                                                  rect.parentNode.children[1].innerHTML = ""
+                                                })
+                                              showMC(leftc, leftm, rightc, rightm)
+                                              setTimeout(()=>{
+                                                document.querySelectorAll('rect').forEach(rect=>{
+                                                  rect.parentNode.children[1].innerHTML = ""
+                                                })
+                                                showMC(leftc - mSumC, leftm - mSumM, rightc + pSumC, rightm + pSumM)
+                                              }, 5000)
+                                            }
+                                            
+                                          }
+                                        } else {
+                                          if (rightm < mSumM || rightc < mSumC) {
+                                            setShowAlert({...showAlert, show:true, title:"Not ok!", message:"The - sign on m or c is too big!", btnColor:"red", btnText:'OK'})
+                                          } else {
+                                            if (leftc + mSumC > leftm + mSumM || rightc - pSumC > rightm - pSumM) {
+                                              setShowAlert({...showAlert, show:true, title:"You got eaten!",
+                                              message:"The number of canibals on one side is bigger than the number of missionaries on one of the states! They ate you!", btnColor:"red", btnText:'OK'})
+                                            } else {
+                                              newState = constructOption(leftc + mSumC, leftm + mSumM, rightc - pSumC, rightm - pSumM, 1-firstBoatPosition)
+                                              console.log("NEW STATE: ", newState)
+                                              document.getElementById("chooseOption").innerHTML += `<p class="wait">${newState}</p><p class="wait">Wait 5 seconds for the animation to complete.`
+                                              // ANIMATION AS IN INITIAL->
+                                              document.querySelectorAll('rect').forEach(rect=>{
+                                                  rect.parentNode.children[1].innerHTML = ""
+                                                })
+                                              showMC(leftc, leftm, rightc, rightm)
+                                              setTimeout(()=>{
+                                                // PART 2 ANIMATION
+                                              // MAI INTAI STERGE  CE TREBUIE!
+                                                document.querySelectorAll('rect').forEach(rect=>{
+                                                  rect.parentNode.children[1].innerHTML = ""
+                                                })
+                                                showMC(leftc + mSumC, leftm + mSumM, rightc - pSumC, rightm - pSumM)
+                                              }, 5000)
+
+                                            }
+                                          }
+                                        }
+                                        // NU CONTEAZA UNDE SUNT SEMNELE! SE PUN DOAR IN FUNCTIE DE CAT SE PUNE CU - SI +
+                                        // face inactiv butonul de search!
+                                        // WHILE cu tot 'jocul', pana cand ajunge la final, in fct de starea boat-ului
+                                          // AICI SA VEDEM CE PUNE! si pui optiunile ca si butoane (sa-si dea seama ei dc e ok sau nu starea)
+                                          // daca alege una not ok, animatie, se activeaza search + break & alerta game over (YOU WERE ANNOUNCED!)
+                                          // daca e una corecta => animatie dupa o sec la starea pe care a ales-o si apare un alt set de butoane!
+                                        // la finalul jocului, cand ajunge la final, se activeaza search
+                                      } else {
+                                        setShowAlert({...showAlert, show:true, title:"Not ok!", message:"Not correctly written! Check the instructions for more!", btnColor:"red", btnText:'OK'})
+                                      }
+                                    } else {
+                                      setShowAlert({...showAlert, show:true, title:"Not ok!", message:"Cannot find the same sum for + and -!", btnColor:"red", btnText:'OK'})
+                                    }
+                                  } else {
+                                    console.log("not really + message")
+                                    setShowAlert({...showAlert, show:true, title:"Not ok!", message:"Not really + message!", btnColor:"red", btnText:'OK'})
+                                  }
+                                }
+                              }
+                            }
+                          } else {
+                            setShowAlert({...showAlert, show:true, title:"Not ok!", message:"Check the instruction before writing!", btnColor:"red", btnText:'OK'})
+                          }
                         } else {
-                        // will verify if such a transition can be made
-                        // if not -> sweet alert!! -> showNotAllTransition
-                        // if yes -> makes the animation and stops if something goes wrong! and will continue (if no wrong) until final state
+                          console.log("not the same length states")
+                          setShowAlert({...showAlert, show:true, title:"Not ok!", message:"The states do not have the same length!", btnColor:"red", btnText:'OK'})
                         }
                       }
-                      console.log("in all")
                     }else {
                       // sweet alert -> the data introduced is not correct for the transition ->  try the following
                       setShowAlert({...showAlert, show:true, title:"Not a transition!", message:"The data introduced is not correct for the transition -> try one the followings: s, initial->((...),(...),..) and all->((...),(...),...)", btnColor:"red", btnText:"WILL DO"})
-
                     }
                   }
-                  
-                
                 }
               }
             }/> 
@@ -875,4 +1080,225 @@ function constructMC(){
 
   })
 }
+
+function searchForOptions(vectInBoat, lc, lm, rc, rm, boat) {
+  let options = [] // states possible! without (       ), will be put just at btn text
+  let llc = lc, llm = lm, rrc = rc, rrm = rm
+  let vals = []
+  vectInBoat.forEach(element => {
+    if (element.join("") == "MM") {
+      rrm+=2
+      llm-=2
+      options.push(constructOption(llc,llm,rrc,rrm, boat))
+      if (rrm < rrc || llm < llc) {
+        vals.push(0)
+      } else {
+        vals.push(1)
+      }
+      llm = lm; rrm = rm
+    } else if (element.join("") == "MC") {
+      rrm++
+      llm--
+      rrc++
+      llc--
+      options.push(constructOption(llc,llm,rrc,rrm, boat))
+      if (rrm < rrc || llm < llc) {
+        vals.push(0)
+      } else {
+        vals.push(1)
+      }
+      llc = lc; llm = lm; rrc = rc; rrm = rm
+    } else { // CC
+      rrc+=2
+      llc-=2
+      options.push(constructOption(llc,llm,rrc,rrm, boat))
+      if (rrm < rrc || llm < llc) {
+        vals.push(0)
+      } else {
+        vals.push(1)
+      }
+      llc = lc; rrc = rc
+    }
+  });
+  return [options, vals]
+}
+
+function searchForOptionsReverse(vectInBoat, lc, lm, rc, rm, boat) {
+  let options = [] // states possible! without (       ), will be put just at btn text
+  let llc = lc, llm = lm, rrc = rc, rrm = rm
+  let vals = []
+  vectInBoat.forEach(element => {
+    if (element.join("") == "MM") {
+      llm+=2
+      rrm-=2
+      options.push(constructOption(llc,llm,rrc,rrm, boat))
+      if (rrm < rrc || llm < llc) {
+        vals.push(0)
+      } else {
+        vals.push(1)
+      }
+      llm = lm; rrm = rm
+    } else if (element.join("") == "MC") {
+      llm++
+      rrm--
+      llc++
+      rrc--
+      options.push(constructOption(llc,llm,rrc,rrm, boat))
+      if (rrm < rrc || llm < llc) {
+        vals.push(0)
+      } else {
+        vals.push(1)
+      }
+      llc = lc; llm = lm; rrc = rc; rrm = rm
+    } else if (element.join("") == "CC") { 
+      llc+=2
+      rrc-=2
+      options.push(constructOption(llc,llm,rrc,rrm, boat))
+      if (rrm < rrc || llm < llc) {
+        vals.push(0)
+      } else {
+        vals.push(1)
+      }
+      llc = lc; rrc = rc
+    } else if (element.join("") == "M") {
+      llm++
+      rrm--
+      options.push(constructOption(llc,llm,rrc,rrm, boat))
+      if (rrm < rrc || llm < llc) {
+        vals.push(0)
+      } else {
+        vals.push(1)
+      }
+      llm = lm; rrm = rm
+    } else { // C
+      llc++
+      rrc--
+      options.push(constructOption(llc,llm,rrc,rrm, boat))
+      if (rrm < rrc || llm < llc) {
+        vals.push(0)
+      } else {
+        vals.push(1)
+      }
+      llc = lc; rrc = rc
+    }
+  });
+  return [options, vals]
+}
+
+function constructOption(lc, lm, rc, rm, boat) {
+  let option = "("
+  for (let i = 0; i < lm; i++) {
+    if ((lm+rm-1) == i) {
+     option += "0"
+    } else {
+      option += "0,"
+    }
+  }
+
+  for (let i = lm; i < rm+lm; i++) {
+    if ((lm+rm-1) == i) {
+     option += "1"
+    } else {
+      option += "1,"
+    }
+  }
+  option += "),("
+
+  for (let i = 0; i < lc; i++) {
+      if ((lc+rc-1) == i) {
+      option += "0"
+      } else {
+        option += "0,"
+      }
+    }
+
+  for (let i = lc; i < rc+lc; i++) {
+    if ((lc+rc-1) == i) {
+    option += "1"
+    } else {
+      option += "1,"
+    }
+  }
+  option += "),"+boat
+
+
+  return option
+}
+let caca=-1;
+function amApasat(opt, val, optionChosen, setOptionChosen){
+    console.log("AICI FA AAA")
+    let amAles = opt;
+    setOptionChosen(opt)
+    // caca=1
+    // console.log(caca)
+    document.querySelector("#chooseOption").innerHTML = `<p className="select-category__txt">Your options:</p>`
+
+    if(val == 0) {
+      // nu e ok
+      console.log("NOT OK")
+      return false
+    } else {
+      // e ok!!!!
+      console.log("OK!!!!!!!")
+      return true
+    }
+    // if (isok == 0) {
+    //   let searchbtn = document.getElementById("submitUserData")
+    //   searchbtn.style.background = "purple"
+    //   searchbtn.disabled = false
+    //   console.log("GAME OVER!")
+    //   return false
+    // } else {
+    //   console.log("next")
+    //   return true
+    // }
+
+  }
+
+function makeButton(options, vals, optionChosen, setOptionChosen) {
+  let btns = ``
+  let amAles = ""
+  
+
+  console.log(options)
+  for (let i = 0; i < options.length; i++) {
+    const btn = `<div><input name="same" id="${options[i]}" type='radio'/><label for="${options[i]}">${options[i]}</label></div>`
+    document.querySelector("#chooseOption").innerHTML += `${btn}`
+    document.getElementById (options[i]).addEventListener ("click", ()=>{amAles = amApasat(options[i], vals[i],optionChosen, setOptionChosen)})
+  }
+  console.log(amAles)
+
+  // TODO: in makebutton: facut butoane, apasat pe buton -> alegere optiune
+  // dupa ce s-a apasat, se da clear la butoane, se asteapta 2 sec
+  // se face animatie scurta pt unde te duce starea aia
+  // dupa animatie iti spune dc e ok sau nu
+  let chosenornot = false
+  // VEZI CARE OPTIUNE E ALEASA
+
+  //   for (let i = 0; i < options.length; i++) {
+  //     let button = document.getElementById(options[i])
+  //     if (button.checked) {
+  //       setOptionChosen(i+1)
+  //       isok = vals[i]
+  //       chosenornot = true
+  //     }else{
+  //       continue
+  //     }
+  //   }
+
+  // document.querySelector("#chooseOption").innerHTML = `<p className="select-category__txt">Your options:</p>`
+  // animation todo here
+  // if (isok == 0) {
+  //   let searchbtn = document.getElementById("submitUserData")
+  //   searchbtn.style.background = "purple"
+  //   searchbtn.disabled = false
+  //   console.log("GAME OVER!")
+  //   return false
+  // } else {
+  //   console.log("next")
+  //   return true
+  // }
+  
+}
+
 export default App;
