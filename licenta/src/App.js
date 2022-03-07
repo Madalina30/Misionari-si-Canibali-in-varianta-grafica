@@ -267,9 +267,7 @@ function App() {
                     if (transition == "final") {
                       let newState = "(";
                       console.log(leftm, leftc, rightm, rightc)
-                      let inBoat = [];
-                      let boatPosition = firstBoatPosition
-                      let newLeftm = leftm, newLeftc = leftc, newRightm = rightm, newRightc = rightc
+                      document.getElementById("chooseOption").innerHTML = `<p class="select-category__txt">The chosen option:</p>`
                       // STAREA ESTE (....),(...)... FARA PARANTEZE!
                       // verify if possible state -> de la state facuta si sa nu aiba voie sa mearga mai departe!!!!!
                       // adik animatie pana intr-un punct sau dc nu are unde sa mearga (if possible)
@@ -278,17 +276,434 @@ function App() {
                           // DOAR O ARATA FINALA SI II SI SPUNE
                           console.log("este finala")
                       } else {
-                        let move = 0;
                         console.log("From state ", state, ":\n")
-                        // DOAR PT 3
-                        while (state != finalState || state != finalState.replace("),1", "),0") ) {
-                          // TODO GENERAL, WITH DIFFERENT PARAMETERS
+                        let stateToChange = state, boatPos = firstBoatPosition
+                        // see finalstate if differ
+                        let allLeftc = leftc, allLeftm = leftm, allRightc = rightc, allRightm = rightm
+                        // prima stare e deja verificata
+                        // MOMENTAN SE INCEPE DOAR CU 0!
+                        let inBoatAll = [], options = [], vals = [], i = 1;
+                        let steps = []
+                        function animationC() {
+                          if (stateToChange != finalState) {
+                            if ((boatPos == 0 && firstBoatPosition == 0)) { // || (boatPos == 1 && firstBoatPosition == 1)
+                            // daca e in cea din care porneste
+                            if (stateToChange == initialState) {
+                              if ((allLeftc + allRightc) == 1) {
+                                inBoatAll = ['M', 'C']
+                                boatPos = 1 - boatPos;
+                                options = [finalState]
+                                vals = [1] // 1 is ok
+                                stateToChange = finalState
+                                steps.push(stateToChange);
+                                // break
+                              } else {
+                                // 3 options: MM, MC, CC -> fiind inceput, face un random aici mai mult
+                                inBoatAll = [['M', 'C'], ['M', 'M'], ['C', 'C']]
+                                boatPos = 1 - boatPos;
+                                console.log("AICI OPTIONS");
+                                stateToChange = changeStateMethod(inBoatAll, allLeftc, allLeftm, allRightc, allRightm, boatPos);
+                                  console.log("vezi aici",allLeftm, allRightm, allLeftc, allRightc)
+
+                                if (stateToChange != "no"){
+                                  console.log("AM ALES STAREA:", stateToChange)
+                                  document.getElementById("chooseOption").innerHTML = `<p class="select-category__txt">The chosen option:
+                                  <p>(${stateToChange})</p>`
+                                  document.querySelectorAll('rect').forEach(rect=>{
+                                      rect.parentNode.children[1].innerHTML = ""
+                                  });
+                                  showMC(allLeftc, allLeftm, allRightc, allRightm);
+                                  [allLeftm, allRightm, allLeftc, allRightc] = verifyState(stateToChange, setShowAlert, showAlert);
+                                  // AICI NU MAKE BUTTON, CI VERIF DACA ALEGEREA E BUNA SI TRECE MAI DEPARTE DC DA! (TREBUIE SA AJUNGA CUMVA LA FINAL)
+                                  
+                                  steps.push(stateToChange);
+                                  setTimeout(()=>{
+                                    animationC()
+                                  }, 3000)
+
+                                }else{
+                                  console.log("not good")
+                                  // break
+                                }
+                              }
+                            } else { // if not initial state
+                              if (allLeftc >= 2) {
+                                if (allLeftm >=2) {
+                                  // 3 options: MM, MC, CC
+                                  inBoatAll = [['M', 'C'], ['M', 'M'], ['C', 'C']]
+                                  boatPos = 1 - boatPos;
+                                  stateToChange = changeStateMethod(inBoatAll, allLeftc, allLeftm, allRightc, allRightm, boatPos)
+                                  if (stateToChange != "no"){
+                                  console.log("AM ALES STAREA:", stateToChange)
+                                  document.getElementById("chooseOption").innerHTML = `<p class="select-category__txt">The chosen option:
+                                  <p>(${stateToChange})</p>`
+                                  document.querySelectorAll('rect').forEach(rect=>{
+                                      rect.parentNode.children[1].innerHTML = ""
+                                  });
+                                    showMC(allLeftc, allLeftm, allRightc, allRightm);
+                                  [allLeftm, allRightm, allLeftc, allRightc] = verifyState(stateToChange, setShowAlert, showAlert);
+                                  
+                                  // AICI NU MAKE BUTTON, CI VERIF DACA ALEGEREA E BUNA SI TRECE MAI DEPARTE DC DA! (TREBUIE SA AJUNGA CUMVA LA FINAL)
+                                   
+                                  steps.push(stateToChange);
+                                  setTimeout(()=>{
+                                    animationC()
+                                  }, 3000)
+                                }else{
+                                  console.log("not good")
+                                  // break
+                                }
+                                } else if (allLeftm == 1) {
+                                  inBoatAll = [['M', 'C'], ['C', 'C']]
+                                  boatPos = 1 - boatPos;
+                                  stateToChange = changeStateMethod(inBoatAll, allLeftc, allLeftm, allRightc, allRightm, boatPos)
+                                  if (stateToChange != "no"){
+                                  console.log("AM ALES STAREA:", stateToChange)
+                                  document.getElementById("chooseOption").innerHTML = `<p class="select-category__txt">The chosen option:
+                                  <p>(${stateToChange})</p>`
+                                  document.querySelectorAll('rect').forEach(rect=>{
+                                      rect.parentNode.children[1].innerHTML = ""
+                                  });
+                                    showMC(allLeftc, allLeftm, allRightc, allRightm);
+                                  [allLeftm, allRightm, allLeftc, allRightc] = verifyState(stateToChange, setShowAlert, showAlert);
+                                  
+                                  // AICI NU MAKE BUTTON, CI VERIF DACA ALEGEREA E BUNA SI TRECE MAI DEPARTE DC DA! (TREBUIE SA AJUNGA CUMVA LA FINAL)
+                                   
+                                  steps.push(stateToChange);
+                                  setTimeout(()=>{
+                                    animationC()
+                                  }, 3000)
+                                }else{
+                                  console.log("not good")
+                                  // break
+                                }
+                                } else { //lm=0
+                                  inBoatAll = [['C', 'C']]
+                                  boatPos = 1 - boatPos;
+                                  stateToChange = changeStateMethod(inBoatAll, allLeftc, allLeftm, allRightc, allRightm, boatPos)
+                                  if (stateToChange != "no"){
+                                    console.log("AM ALES STAREA:", stateToChange)
+                                    document.getElementById("chooseOption").innerHTML = `<p class="select-category__txt">The chosen option:
+                                    <p>(${stateToChange})</p>`
+                                    document.querySelectorAll('rect').forEach(rect=>{
+                                        rect.parentNode.children[1].innerHTML = ""
+                                    });
+                                      showMC(allLeftc, allLeftm, allRightc, allRightm);
+                                    [allLeftm, allRightm, allLeftc, allRightc] = verifyState(stateToChange, setShowAlert, showAlert);
+                                    
+                                    // AICI NU MAKE BUTTON, CI VERIF DACA ALEGEREA E BUNA SI TRECE MAI DEPARTE DC DA! (TREBUIE SA AJUNGA CUMVA LA FINAL)
+                                    
+                                    steps.push(stateToChange);
+                                    setTimeout(()=>{
+                                      animationC()
+                                    }, 3000)
+                                  }else{
+                                    console.log("not good")
+                                    // break
+                                  }
+                                }
+                              } else if (allLeftc == 1) {
+                                if (allLeftm >= 2) {
+                                  inBoatAll = [['M', 'C'], ['M', 'M']]
+                                  boatPos = 1 - boatPos;
+                                  stateToChange = changeStateMethod(inBoatAll, allLeftc, allLeftm, allRightc, allRightm, boatPos)
+                                  if (stateToChange != "no"){
+                                    console.log("AM ALES STAREA:", stateToChange)
+                                    document.getElementById("chooseOption").innerHTML = `<p class="select-category__txt">The chosen option:
+                                    <p>(${stateToChange})</p>`
+                                    document.querySelectorAll('rect').forEach(rect=>{
+                                        rect.parentNode.children[1].innerHTML = ""
+                                    });
+                                      showMC(allLeftc, allLeftm, allRightc, allRightm);
+                                    [allLeftm, allRightm, allLeftc, allRightc] = verifyState(stateToChange, setShowAlert, showAlert);
+                                    
+                                    // AICI NU MAKE BUTTON, CI VERIF DACA ALEGEREA E BUNA SI TRECE MAI DEPARTE DC DA! (TREBUIE SA AJUNGA CUMVA LA FINAL)
+                                    
+                                    steps.push(stateToChange);
+                                    setTimeout(()=>{
+                                      animationC()
+                                    }, 3000)
+                                  }else{
+                                    console.log("not good")
+                                    // break
+                                  }
+                                } else if (allLeftm == 1){
+                                  inBoatAll = [['M', 'C']]
+                                  boatPos = 1 - boatPos;
+                                  stateToChange = changeStateMethod(inBoatAll, allLeftc, allLeftm, allRightc, allRightm, boatPos)
+                                  if (stateToChange != "no"){
+                                    console.log("AM ALES STAREA:", stateToChange)
+                                    document.getElementById("chooseOption").innerHTML = `<p class="select-category__txt">The chosen option:
+                                    <p>(${stateToChange})</p>`
+                                    document.querySelectorAll('rect').forEach(rect=>{
+                                        rect.parentNode.children[1].innerHTML = ""
+                                    });
+                                      showMC(allLeftc, allLeftm, allRightc, allRightm);
+                                    [allLeftm, allRightm, allLeftc, allRightc] = verifyState(stateToChange, setShowAlert, showAlert);
+                                    
+                                    // AICI NU MAKE BUTTON, CI VERIF DACA ALEGEREA E BUNA SI TRECE MAI DEPARTE DC DA! (TREBUIE SA AJUNGA CUMVA LA FINAL)
+                                    
+                                    steps.push(stateToChange);
+                                    setTimeout(()=>{
+                                      animationC()
+                                    }, 3000)
+                                  }else{
+                                    console.log("not good")
+                                    // break
+                                  }
+                                } else { //lm=0
+                                  console.log("NOT OK!")
+                                  setShowAlert({...showAlert, show:true, title:"Not ok!", message:"Not ok - todo!", btnColor:"aqua", btnText:'OK'})
+                                  // break
+                                  // mesaj game over + search button activate
+                                }
+                              } else {
+                                console.log("nothin here")
+                                // break
+                              }
+                            }
+                          } else {
+                            // daca e in cea in care e prezenta starea finala!
+                            if (allRightc >= 2) {
+                              if (allRightm >= 2) {
+                                inBoatAll = [['M', 'M'],['M', 'C'],['C', 'C'],['M'],['C']]
+                                boatPos = 1 - boatPos;
+                                stateToChange = changeStateMethodReverse(inBoatAll, allLeftc, allLeftm, allRightc, allRightm, boatPos)
+                                if (stateToChange != "no"){
+                                  console.log("AM ALES STAREA:", stateToChange)
+                                  document.getElementById("chooseOption").innerHTML = `<p class="select-category__txt">The chosen option:
+                                  <p>(${stateToChange})</p>`
+                                  document.querySelectorAll('rect').forEach(rect=>{
+                                      rect.parentNode.children[1].innerHTML = ""
+                                  });
+                                    showMC(allLeftc, allLeftm, allRightc, allRightm);
+                                  [allLeftm, allRightm, allLeftc, allRightc] = verifyState(stateToChange, setShowAlert, showAlert);
+                                  
+                                  // AICI NU MAKE BUTTON, CI VERIF DACA ALEGEREA E BUNA SI TRECE MAI DEPARTE DC DA! (TREBUIE SA AJUNGA CUMVA LA FINAL)
+                                   
+                                  steps.push(stateToChange);
+                                  setTimeout(()=>{
+                                    animationC()
+                                  }, 3000)
+                                }else{
+                                  console.log("not good")
+                                  // break
+                                }
+                              } else if (allRightm == 1) {
+                                inBoatAll = [['M', 'C'],['C', 'C'],['M'],['C']]
+                                boatPos = 1 - boatPos;
+                                stateToChange = changeStateMethodReverse(inBoatAll, allLeftc, allLeftm, allRightc, allRightm, boatPos)
+                                if (stateToChange != "no"){
+                                  console.log("AM ALES STAREA:", stateToChange)
+                                  document.getElementById("chooseOption").innerHTML = `<p class="select-category__txt">The chosen option:
+                                  <p>(${stateToChange})</p>`
+                                  document.querySelectorAll('rect').forEach(rect=>{
+                                      rect.parentNode.children[1].innerHTML = ""
+                                  });
+                                    showMC(allLeftc, allLeftm, allRightc, allRightm);
+                                  [allLeftm, allRightm, allLeftc, allRightc] = verifyState(stateToChange, setShowAlert, showAlert);
+                                  
+                                  // AICI NU MAKE BUTTON, CI VERIF DACA ALEGEREA E BUNA SI TRECE MAI DEPARTE DC DA! (TREBUIE SA AJUNGA CUMVA LA FINAL)
+                                   
+                                  steps.push(stateToChange);
+                                  setTimeout(()=>{
+                                    animationC()
+                                  }, 3000)
+                                }else{
+                                  console.log("not good")
+                                  // break
+                                }
+                              } else {
+                                inBoatAll = [['C', 'C'],['C']]
+                                boatPos = 1 - boatPos;
+                                stateToChange = changeStateMethodReverse(inBoatAll, allLeftc, allLeftm, allRightc, allRightm, boatPos)
+                                if (stateToChange != "no"){
+                                  console.log("AM ALES STAREA:", stateToChange)
+                                  document.getElementById("chooseOption").innerHTML = `<p class="select-category__txt">The chosen option:
+                                  <p>(${stateToChange})</p>`
+                                  document.querySelectorAll('rect').forEach(rect=>{
+                                      rect.parentNode.children[1].innerHTML = ""
+                                  });
+                                    showMC(allLeftc, allLeftm, allRightc, allRightm);
+                                  [allLeftm, allRightm, allLeftc, allRightc] = verifyState(stateToChange, setShowAlert, showAlert);
+                                  
+                                  // AICI NU MAKE BUTTON, CI VERIF DACA ALEGEREA E BUNA SI TRECE MAI DEPARTE DC DA! (TREBUIE SA AJUNGA CUMVA LA FINAL)
+                                   
+                                  steps.push(stateToChange);
+                                  setTimeout(()=>{
+                                    animationC()
+                                  }, 3000)
+                                }else{
+                                  console.log("not good")
+                                  // break
+                                }
+                              }
+                            } else if (allRightc == 1) {
+                              if (allRightm >= 2) {
+                                inBoatAll = [['M', 'M'],['M', 'C'],['M'],['C']]
+                                boatPos = 1 - boatPos;
+                                stateToChange = changeStateMethodReverse(inBoatAll, allLeftc, allLeftm, allRightc, allRightm, boatPos)
+                                if (stateToChange != "no"){
+                                  console.log("AM ALES STAREA:", stateToChange)
+                                  document.getElementById("chooseOption").innerHTML = `<p class="select-category__txt">The chosen option:
+                                  <p>(${stateToChange})</p>`
+                                  document.querySelectorAll('rect').forEach(rect=>{
+                                      rect.parentNode.children[1].innerHTML = ""
+                                  });
+                                    showMC(allLeftc, allLeftm, allRightc, allRightm);
+                                  [allLeftm, allRightm, allLeftc, allRightc] = verifyState(stateToChange, setShowAlert, showAlert);
+                                  
+                                  // AICI NU MAKE BUTTON, CI VERIF DACA ALEGEREA E BUNA SI TRECE MAI DEPARTE DC DA! (TREBUIE SA AJUNGA CUMVA LA FINAL)
+                                   
+                                  steps.push(stateToChange);
+                                  setTimeout(()=>{
+                                    animationC()
+                                  }, 3000)
+                                }else{
+                                  console.log("not good")
+                                  // break
+                                }
+                              } else if (allRightm == 1) {
+                                inBoatAll = [['M', 'C'],['M'],['C']]
+                                boatPos = 1 - boatPos;
+                                stateToChange = changeStateMethodReverse(inBoatAll, allLeftc, allLeftm, allRightc, allRightm, boatPos)
+                                if (stateToChange != "no"){
+                                  console.log("AM ALES STAREA:", stateToChange)
+                                  document.getElementById("chooseOption").innerHTML = `<p class="select-category__txt">The chosen option:
+                                  <p>(${stateToChange})</p>`
+                                  document.querySelectorAll('rect').forEach(rect=>{
+                                      rect.parentNode.children[1].innerHTML = ""
+                                  });
+                                    showMC(allLeftc, allLeftm, allRightc, allRightm);
+                                  [allLeftm, allRightm, allLeftc, allRightc] = verifyState(stateToChange, setShowAlert, showAlert);
+                                  
+                                  // AICI NU MAKE BUTTON, CI VERIF DACA ALEGEREA E BUNA SI TRECE MAI DEPARTE DC DA! (TREBUIE SA AJUNGA CUMVA LA FINAL)
+                                   
+                                  steps.push(stateToChange);
+                                  setTimeout(()=>{
+                                    animationC()
+                                  }, 3000)
+                                }else{
+                                  console.log("not good")
+                                  // break
+                                }
+                              } else { //rm=0
+                                inBoatAll = [['C']]
+                                boatPos = 1 - boatPos;
+                                stateToChange = changeStateMethodReverse(inBoatAll, allLeftc, allLeftm, allRightc, allRightm, boatPos)
+                                if (stateToChange != "no"){
+                                  console.log("AM ALES STAREA:", stateToChange)
+                                  document.getElementById("chooseOption").innerHTML = `<p class="select-category__txt">The chosen option:
+                                  <p>(${stateToChange})</p>`
+                                  document.querySelectorAll('rect').forEach(rect=>{
+                                      rect.parentNode.children[1].innerHTML = ""
+                                  });
+                                    showMC(allLeftc, allLeftm, allRightc, allRightm);
+                                  [allLeftm, allRightm, allLeftc, allRightc] = verifyState(stateToChange, setShowAlert, showAlert);
+                                  // AICI NU MAKE BUTTON, CI VERIF DACA ALEGEREA E BUNA SI TRECE MAI DEPARTE DC DA! (TREBUIE SA AJUNGA CUMVA LA FINAL)
+                                   
+                                  steps.push(stateToChange);
+                                  setTimeout(()=>{
+                                    animationC()
+                                  }, 3000)
+                                }else{
+                                  console.log("not good")
+                                  // break
+                                }
+                              }
+                            } else { // rc=0
+                              if (allRightm >= 2) {
+                                inBoatAll = [['M', 'M'],['M']]
+                                boatPos = 1 - boatPos;
+                                stateToChange = changeStateMethodReverse(inBoatAll, allLeftc, allLeftm, allRightc, allRightm, boatPos)
+                                if (stateToChange != "no"){
+                                  console.log("AM ALES STAREA:", stateToChange)
+                                  document.getElementById("chooseOption").innerHTML = `<p class="select-category__txt">The chosen option:
+                                  <p>(${stateToChange})</p>`
+                                  document.querySelectorAll('rect').forEach(rect=>{
+                                      rect.parentNode.children[1].innerHTML = ""
+                                  });
+                                    showMC(allLeftc, allLeftm, allRightc, allRightm);
+                                  [allLeftm, allRightm, allLeftc, allRightc] = verifyState(stateToChange, setShowAlert, showAlert);
+                                  
+                                  // AICI NU MAKE BUTTON, CI VERIF DACA ALEGEREA E BUNA SI TRECE MAI DEPARTE DC DA! (TREBUIE SA AJUNGA CUMVA LA FINAL)
+                                   
+                                  steps.push(stateToChange);
+                                  setTimeout(()=>{
+                                    animationC()
+                                  }, 3000)
+                                }else{
+                                  console.log("not good")
+                                  // break
+                                }
+                              } else if (allRightm == 1) {
+                                inBoatAll = [['M']]
+                                boatPos = 1 - boatPos;
+                                stateToChange = changeStateMethodReverse(inBoatAll, allLeftc, allLeftm, allRightc, allRightm, boatPos)
+                                if (stateToChange != "no"){
+                                  console.log("AM ALES STAREA:", stateToChange)
+                                  document.getElementById("chooseOption").innerHTML = `<p class="select-category__txt">The chosen option:
+                                  <p>(${stateToChange})</p>`
+                                  document.querySelectorAll('rect').forEach(rect=>{
+                                      rect.parentNode.children[1].innerHTML = ""
+                                  });
+                                  showMC(allLeftc, allLeftm, allRightc, allRightm);
+                                  [allLeftm, allRightm, allLeftc, allRightc] = verifyState(stateToChange, setShowAlert, showAlert);
+                                  
+                                  // AICI NU MAKE BUTTON, CI VERIF DACA ALEGEREA E BUNA SI TRECE MAI DEPARTE DC DA! (TREBUIE SA AJUNGA CUMVA LA FINAL)
+                                   
+                                  steps.push(stateToChange);
+                                  setTimeout(()=>{
+                                    animationC()
+                                  }, 3000)
+                                }else{
+                                  console.log("not good")
+                                  // break
+                                }
+                              } else {
+                                console.log("NOTHING HERE - MAYBE FINAL STATE")
+                                // break
+                              }
+                            }
+                            document.querySelectorAll('rect').forEach(rect=>{
+                                rect.parentNode.children[1].innerHTML = "";
+                            });
+                            showMC(allLeftc, allLeftm, allRightc, allRightm);
+
+                          }
                           
-                          break
-                        }  // end while
-                      }
+                          } else {
+                            document.querySelectorAll('rect').forEach(rect=>{
+                                rect.parentNode.children[1].innerHTML = "";
+                            });
+                            showMC(allLeftc, allLeftm, allRightc, allRightm);
+                            setShowAlert({...showAlert, show:true, title:"Final!", message:"The animation is completed and you reached the finale! ", btnColor:"red"})
+
+                          }
+
+                        }
+                        animationC()
+                        // while (stateToChange != finalState) {
+                          
+                        //   setTimeout(()=>{
+                        //     document.querySelectorAll('rect').forEach(rect=>{
+                        //       rect.parentNode.children[1].innerHTML = "";
+                        //     });
+                        //     console.log("aici + ", i)
+                        //     showMC(allLeftc, allLeftm, allRightc, allRightm);
+                        //     // in functie de optiunea aleasa      
+                        //     // idk if right
+                        //   }, 3000*i)
+                        //   i++;
+                        //   console.log(i)
+                        // }// end while
+                          console.log("your entire progress:")
+                          steps.forEach(element => {
+                            console.log(element)
+                          });
+                      } 
                         // so if final state is reached -> message on sweetalert that the road is finished or smth!
-                      console.log("in final")
+                      console.log("in final - ai ajuns la final!")
                     } else if (transition.includes("initial->")) {
                       console.log("aici esti")
                       let newState = transition.split("->")[1].split(" ").join("")
@@ -1090,7 +1505,7 @@ function searchForOptions(vectInBoat, lc, lm, rc, rm, boat) {
       rrm+=2
       llm-=2
       options.push(constructOption(llc,llm,rrc,rrm, boat))
-      if (rrm < rrc || llm < llc) {
+      if ((rrm < rrc && rrm != 0)|| (llm < llc && llm != 0)) {
         vals.push(0)
       } else {
         vals.push(1)
@@ -1102,7 +1517,7 @@ function searchForOptions(vectInBoat, lc, lm, rc, rm, boat) {
       rrc++
       llc--
       options.push(constructOption(llc,llm,rrc,rrm, boat))
-      if (rrm < rrc || llm < llc) {
+      if ((rrm < rrc && rrm != 0)|| (llm < llc && llm != 0)) {
         vals.push(0)
       } else {
         vals.push(1)
@@ -1112,7 +1527,7 @@ function searchForOptions(vectInBoat, lc, lm, rc, rm, boat) {
       rrc+=2
       llc-=2
       options.push(constructOption(llc,llm,rrc,rrm, boat))
-      if (rrm < rrc || llm < llc) {
+      if ((rrm < rrc && rrm != 0)|| (llm < llc && llm != 0)) {
         vals.push(0)
       } else {
         vals.push(1)
@@ -1132,7 +1547,7 @@ function searchForOptionsReverse(vectInBoat, lc, lm, rc, rm, boat) {
       llm+=2
       rrm-=2
       options.push(constructOption(llc,llm,rrc,rrm, boat))
-      if (rrm < rrc || llm < llc) {
+      if ((rrm < rrc && rrm != 0)|| (llm < llc && llm != 0)) {
         vals.push(0)
       } else {
         vals.push(1)
@@ -1144,7 +1559,7 @@ function searchForOptionsReverse(vectInBoat, lc, lm, rc, rm, boat) {
       llc++
       rrc--
       options.push(constructOption(llc,llm,rrc,rrm, boat))
-      if (rrm < rrc || llm < llc) {
+      if ((rrm < rrc && rrm != 0)|| (llm < llc && llm != 0)) {
         vals.push(0)
       } else {
         vals.push(1)
@@ -1154,7 +1569,7 @@ function searchForOptionsReverse(vectInBoat, lc, lm, rc, rm, boat) {
       llc+=2
       rrc-=2
       options.push(constructOption(llc,llm,rrc,rrm, boat))
-      if (rrm < rrc || llm < llc) {
+      if ((rrm < rrc && rrm != 0)|| (llm < llc && llm != 0)) {
         vals.push(0)
       } else {
         vals.push(1)
@@ -1164,7 +1579,7 @@ function searchForOptionsReverse(vectInBoat, lc, lm, rc, rm, boat) {
       llm++
       rrm--
       options.push(constructOption(llc,llm,rrc,rrm, boat))
-      if (rrm < rrc || llm < llc) {
+      if ((rrm < rrc && rrm != 0)|| (llm < llc && llm != 0)) {
         vals.push(0)
       } else {
         vals.push(1)
@@ -1174,7 +1589,7 @@ function searchForOptionsReverse(vectInBoat, lc, lm, rc, rm, boat) {
       llc++
       rrc--
       options.push(constructOption(llc,llm,rrc,rrm, boat))
-      if (rrm < rrc || llm < llc) {
+      if ((rrm < rrc && rrm != 0)|| (llm < llc && llm != 0)) {
         vals.push(0)
       } else {
         vals.push(1)
@@ -1224,6 +1639,77 @@ function constructOption(lc, lm, rc, rm, boat) {
 
   return option
 }
+
+function changeStateMethod(inBoatAll, allLeftc, allLeftm, allRightc, allRightm, boatPos){
+  let state = "";
+  console.log("before:", allLeftc, allLeftm, allRightc, allRightm, boatPos)
+  let [options, vals] = searchForOptions(inBoatAll, allLeftc, allLeftm, allRightc, allRightm, boatPos)
+  console.log("after:", allLeftc, allLeftm, allRightc, allRightm, boatPos)
+
+  if (boatPos == "1" && allRightc == allRightm && allRightc == 0) {
+    console.log("AICI ESTI FA IN INITIAL ????????")
+    let optionsAvailable = 0
+    vals.forEach(element => {
+      if (element == 1) 
+      optionsAvailable ++;
+    });
+    if (optionsAvailable > 1) {
+      let randomTodo = []
+      for (let i = 0; i < vals.length; i++) {
+        if (vals[i] == 1) {
+          randomTodo.push(options[i])
+        }
+      }
+      state = randomTodo[Math.floor(Math.random() * randomTodo.length)];
+    } else {
+      for (let i = 0; i < vals.length; i++) {
+        if (vals[i] == 1) {
+          state = options[i];
+        }
+      }
+    }
+    
+  } else {
+    console.log(vals)
+    options.forEach(element=>{
+      console.log("("+element+")")
+    })
+    // daca e initial -> random!
+
+    for (let i = 0; i < vals.length; i++) {
+      if (vals[i] == 1) {
+        state = options[i];
+      }
+    }
+    
+  }
+  if (state)
+      return state;
+    else {
+      return "no"
+    }
+  
+}
+
+function changeStateMethodReverse(inBoatAll, allLeftc, allLeftm, allRightc, allRightm, boatPos){
+  let state;
+  let [options, vals] = searchForOptionsReverse(inBoatAll, allLeftc, allLeftm, allRightc, allRightm, boatPos)
+  console.log(vals)
+  options.forEach(element=>{
+    console.log("("+element+")")
+  })
+  for (let i = 0; i < vals.length; i++) {
+    if (vals[i] == 1) {  // verif dc e initiala?
+      state = options[i];
+    }
+  }
+  if (state)
+    return state;
+  else {
+    return "no"
+  }
+}
+
 let caca=-1;
 function amApasat(opt, val, optionChosen, setOptionChosen){
     console.log("AICI FA AAA")
