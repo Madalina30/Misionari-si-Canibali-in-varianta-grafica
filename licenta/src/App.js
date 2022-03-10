@@ -877,10 +877,8 @@ function App() {
                                       }
                                     }
                                   }
-                                  
                                 }
                               }
-                              
                               
                               let plusesToSumM = [], plusesToSumC = [], minusesToSumM = [], minusesToSumC = []
                               if ((sameNameOperations == 0 || countTheSame == 2) && diffComponents != 0) {
@@ -900,11 +898,9 @@ function App() {
                                 
                                 console.log("diff components nr", diffComponents)
                                 let stateToChange = state, boatPos = firstBoatPosition
-                                // see finalstate if differ
                                 let allLeftc = leftc, allLeftm = leftm, allRightc = rightc, allRightm = rightm
-                                // prima stare e deja verificata
-                                // MOMENTAN SE INCEPE DOAR CU 0!
                                 let inBoatAll = [], options = [], vals = [], okOrNot
+                                
                                 while (stateToChange != finalState) {
                                   if ((boatPos == 0 && firstBoatPosition == 0)) { // || (boatPos == 1 && firstBoatPosition == 1)
                                     // daca e in cea din care porneste
@@ -915,6 +911,35 @@ function App() {
                                         options = [finalState]
                                         vals = [1] // 1 is ok
                                         okOrNot = makeButton(options, vals, optionChosen, setOptionChosen)
+                                        if (okOrNot[1] == 1) {
+                                          document.querySelectorAll('rect').forEach(rect=>{
+                                              rect.parentNode.children[1].innerHTML = ""
+                                          });
+                                          showMC(allLeftc, allLeftm, allRightc, allRightm);
+                                          [allLeftm, allRightm, allLeftc, allRightc] = verifyState(okOrNot[0], setShowAlert, showAlert);
+                                          // animation
+                                          setTimeout(() => {
+                                            document.querySelectorAll('rect').forEach(rect=>{
+                                              rect.parentNode.children[1].innerHTML = ""
+                                            });
+                                          showMC(allLeftc, allLeftm, allRightc, allRightm);
+                                          }, 3000);
+                                          // treci la urm
+                                        } else {
+                                          document.querySelectorAll('rect').forEach(rect=>{
+                                              rect.parentNode.children[1].innerHTML = ""
+                                          });
+                                          showMC(allLeftc, allLeftm, allRightc, allRightm);
+                                          [allLeftm, allRightm, allLeftc, allRightc] = verifyState(okOrNot[0], setShowAlert, showAlert);
+                                          // animation
+                                          setTimeout(() => {
+                                            document.querySelectorAll('rect').forEach(rect=>{
+                                              rect.parentNode.children[1].innerHTML = ""
+                                            });
+                                          showMC(allLeftc, allLeftm, allRightc, allRightm);
+                                          }, 3000);
+                                          // break - se opreste
+                                        }
                                         // make button with this option
                                         // if a button is pressed -> do animation
                                         // then see if the option is ok!
