@@ -5,6 +5,7 @@ import SweetAlert from 'sweetalert-react';
 import 'sweetalert/dist/sweetalert.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleCheck, faArrowAltCircleUp, faArrowAltCircleRight, faNotEqual } from '@fortawesome/free-solid-svg-icons'
+let optionsSelectedCM = {val:''};
 function App() {
   const [selectedMod, setMod] = useState(0) // 0 - simple Road, 1 - M&C
   const [height, setHeight] = useState(window.innerHeight);
@@ -14,11 +15,13 @@ function App() {
   const [hide3, setHide3] = useState(1)
   const [start, setStart] = useState([15, 10])
   const [finish, setFinish] = useState([25,10])
-  const [optionChosen, setOptionChosen] = useState(-1)
+  const [optionChosen, setOptionChosen] = useState([])
 
   const [showAlert, setShowAlert] = useState({show:false, message:'', title:'', btnColor:'green', btnText:'OK'})
 
   let isDown = false, moveStart = false, moveEnd = false
+
+  
 
   useEffect(() => {
     function handleResize() {
@@ -190,7 +193,7 @@ function App() {
            <ul>
              <li>Rule: nr of cannibals &lt; nr of missionaries on all sides;</li>
              <li>You will have to complete the left form;</li>
-             <li>Pattern for State: ((m1, m2, ...), (c1, c2, ...), b), where m1, m2, ... = missionaries, c1, c2, ... = cannibals and b is the state of the boat, each with values {0,1};</li>
+             <li>Pattern for State: ((m1, m2, ...), (c1, c2, ...), b), where m1, m2, ... = missionaries, c1, c2, ... = cannibals and b is the state of the boat, each with values 0 or 1;</li>
              <li>Pattern for transition (3 options): final,initial-&gt;other_state (same format as before) or all-&gt;...</li>
              <li>After pressing the Search button, if you entered correct data and the road can be made, you need to wait 5 seconds for the transition to be made.</li>
            </ul>
@@ -240,12 +243,12 @@ function App() {
                 <h3 className="stare-label">State:</h3>
                 <textarea id="stare" name="stare" rows="2" placeholder="write your state here" required></textarea>
             </div>
-            <div>
+             <div>
                 <h3 className="transition-label">Transition:</h3>
                 <textarea id="transition" name="transition" rows="2" placeholder="write your transition here" required></textarea>
             </div>
             <input type="button" value="Search" id="submitUserData" onClick={
-              (e)=>{
+              (e)=> {
                 constructMC()
                 // will be 3 types of transitions: final, initial->((...),(...),..) and all->((...),(...),...)
                 let state = document.getElementById("stare").value
@@ -797,6 +800,8 @@ function App() {
                       let states = transition.split("->")
                       let baseState = states[1].split(" ").join("")
                       let nextState = states[2].split(" ").join("")
+                      baseState = baseState.toLowerCase();
+                      nextState = nextState.toLowerCase();
                       baseState = removePh(baseState)
                       nextState = removePh(nextState)
                       console.log(baseState, "\n", nextState)
@@ -888,9 +893,9 @@ function App() {
                                     // and then it goes again in the while for dif components and search for next states
                                     // BUTTON FOR END STATE, THE SEARCH BUTTON FROM LEFT IS INACTIVE UNTIL THE GAME ENDS OR THE BUTTON FOR END STATE IS PRESSED
                                   // 
-                                // MAKE SEARCH BUTTON INACTIVE
-                                let searchBtn = document.getElementById("submitUserData")
-                                searchBtn.style.background = "#9a9da1"
+                                // MAKE SEARCH BUTTON INACTIVE??
+                                // let searchBtn = document.getElementById("submitUserData")
+                                // searchBtn.style.background = "#9a9da1"
                                 // searchBtn.disabled = true
                                 
                                 console.log("diff components nr", diffComponents)
@@ -923,6 +928,8 @@ function App() {
                                         options.forEach(element=>{
                                           console.log("("+element+")")
                                         })
+                                        // pt animatie, este nev de toate left right! de la optiunea aleasa!
+                                        // THIS CAN BE MADE FROM THE OPTION
                                         makeButton(options, vals, optionChosen, setOptionChosen)
                                         // if (okOrNot) { //true
                                         //   continue
@@ -1711,33 +1718,12 @@ function changeStateMethodReverse(inBoatAll, allLeftc, allLeftm, allRightc, allR
 }
 
 let caca=-1;
-function amApasat(opt, val, optionChosen, setOptionChosen){
+window.amApasat = function amApasat(opt, val){
     console.log("AICI FA AAA")
-    let amAles = opt;
-    setOptionChosen(opt)
-    // caca=1
-    // console.log(caca)
-    document.querySelector("#chooseOption").innerHTML = `<p className="select-category__txt">Your options:</p>`
+    // document.querySelector("#chooseOption").innerHTML = `<p className="select-category__txt">Your options:</p>`
 
-    if(val == 0) {
-      // nu e ok
-      console.log("NOT OK")
-      return false
-    } else {
-      // e ok!!!!
-      console.log("OK!!!!!!!")
-      return true
-    }
-    // if (isok == 0) {
-    //   let searchbtn = document.getElementById("submitUserData")
-    //   searchbtn.style.background = "purple"
-    //   searchbtn.disabled = false
-    //   console.log("GAME OVER!")
-    //   return false
-    // } else {
-    //   console.log("next")
-    //   return true
-    // }
+    optionsSelectedCM = {opt:opt, val:val}
+    console.log(optionsSelectedCM)
 
   }
 
@@ -1745,14 +1731,18 @@ function makeButton(options, vals, optionChosen, setOptionChosen) {
   let btns = ``
   let amAles = ""
   
-
-  console.log(options)
+// TO RETURN THE OPTION CHOSEN
+  console.log(setOptionChosen)
+  let btn = document.querySelector("#chooseOption")
   for (let i = 0; i < options.length; i++) {
-    const btn = `<div><input name="same" id="${options[i]}" type='radio'/><label for="${options[i]}">${options[i]}</label></div>`
-    document.querySelector("#chooseOption").innerHTML += `${btn}`
-    document.getElementById (options[i]).addEventListener ("click", ()=>{amAles = amApasat(options[i], vals[i],optionChosen, setOptionChosen)})
+      btns += `<div><input name="same" id="${options[i]}" type='radio'
+      onclick="amApasat('${options[i]}', '${vals[i]}')" 
+      /><label for="${options[i]}">${options[i]}</label></div>`
   }
-  console.log(amAles)
+  console.log(btns)
+  btn.innerHTML+=btns
+
+  console.log(optionsSelectedCM)
 
   // TODO: in makebutton: facut butoane, apasat pe buton -> alegere optiune
   // dupa ce s-a apasat, se da clear la butoane, se asteapta 2 sec
