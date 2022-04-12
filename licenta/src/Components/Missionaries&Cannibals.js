@@ -44,7 +44,7 @@ export default function MissionariesCannibals(props){
         Conform JS, Timeout duce functia in queue si 
         asteapta executarea elementelor asincrone.
         */}
-        {setTimeout(()=>{constructMC()},0)}
+        {constructMC()}
         
         {/* Returneaza state si tranzition prin functiile setState si setTransition */}
         <LeftMCTab setStare={setState} setTransition={setTransition}/>
@@ -78,6 +78,8 @@ function checkTranzitionInserts(props, state, transition){
     let finalState = state.replaceAll("0", "1")
     let initialState = state.replaceAll("1", "0")
     let firstBoatPosition = state.split("),")[2]
+    document.getElementById("strategies").style.visibility = "hidden"
+
 
     if(transition=="final"){
         document.getElementById("chooseOption").innerHTML = `<p class="select-category__txt">The chosen option:</p>`

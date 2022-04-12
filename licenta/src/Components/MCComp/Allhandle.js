@@ -1,6 +1,7 @@
 import Utils from './UTILS'
 const utils = new Utils();
 
+
 export default function handleAllTransition(props, state, baseState, nextState, finalState, firstBoatPosition, initialState, boatPos = 0){
     let [leftm, rightm, leftc, rightc] = utils.verifyState(state, props.setShowAlert, props.showAlert)
     let vectBaseState = baseState.split(","), vectState = state.split(","), vectNextState = nextState.split(",")
@@ -78,19 +79,11 @@ export default function handleAllTransition(props, state, baseState, nextState, 
           // diffcomponents da 0 dc e m1+v1 dar trb sa fix it! - putin dif fata de alegerea simpla!
           let plusesToSumM = [], plusesToSumC = [], minusesToSumM = [], minusesToSumC = []
           if ((sameNameOperations == 0 || countTheSame == 2) && diffComponents != 0) {
+            // AICI O SA APARA STRATEGIA SI O SA ALEAGA!!!!!! 
+            document.getElementById("strategies").style.visibility = "visible"
+            
+            // sa astepte pana se alege strategia!
             document.getElementById("chooseOption").innerHTML = `<p className="select-category__txt">Your options:</p>`
-            // TODO!!!!!!!!!!!!!!!!!!!FIRST CASE HERE - no = or - here OR ->M1+V1<-, ETC!
-            // appear buttons for states to choose from! it is written if ok or not!
-                // the start state is put on the screen
-                // if press on the wrong one, an animation is done and after 1 sec the 'game' is over and buttons dissapear
-                // else -> animation for the state chosen -> wait 1 sec and it will change on the screen like initial->
-                // and then it goes again in the while for dif components and search for next states
-                // BUTTON FOR END STATE, THE SEARCH BUTTON FROM LEFT IS INACTIVE UNTIL THE GAME ENDS OR THE BUTTON FOR END STATE IS PRESSED
-              // 
-            // MAKE SEARCH BUTTON INACTIVE??
-            // let searchBtn = document.getElementById("submitUserData")
-            // searchBtn.style.background = "#9a9da1"
-            // searchBtn.disabled = true
             
             console.log("diff components nr", diffComponents)
             let stateToChange = state;
@@ -107,39 +100,6 @@ export default function handleAllTransition(props, state, baseState, nextState, 
                     boatPos = 1 - boatPos;
                     options = [finalState]
                     vals = [1] // 1 is ok
-                    // if (okOrNot[1] == 1) {
-                    //   document.querySelectorAll('rect').forEach(rect=>{
-                    //       rect.parentNode.children[1].innerHTML = ""
-                    //   });
-                    //   utils.showMC(allLeftm, allRightm, allLeftc, allRightc);
-                    //   [allLeftm, allRightm, allLeftc, allRightc] = utils.verifyState(okOrNot[0], props.setShowAlert, props.showAlert);
-                    //   // animation
-                    //   setTimeout(() => {
-                    //     document.querySelectorAll('rect').forEach(rect=>{
-                    //       rect.parentNode.children[1].innerHTML = ""
-                    //     });
-                    //   utils.showMC(allLeftm, allRightm, allLeftc, allRightc);
-                    //   }, 3000);
-                    //   // treci la urm
-                    // } else {
-                    //   document.querySelectorAll('rect').forEach(rect=>{
-                    //       rect.parentNode.children[1].innerHTML = ""
-                    //   });
-                    //   utils.showMC(allLeftm, allRightm, allLeftc, allRightc);
-                    //   [allLeftm, allRightm, allLeftc, allRightc] = utils.verifyState(okOrNot[0], props.setShowAlert, props.showAlert);
-                    //   // animation
-                    //   setTimeout(() => {
-                    //     document.querySelectorAll('rect').forEach(rect=>{
-                    //       rect.parentNode.children[1].innerHTML = ""
-                    //     });
-                    //   utils.showMC(allLeftm, allRightm, allLeftc, allRightc);
-                    //   }, 3000);
-                    //   // break - se opreste
-                    // }
-                    // make button with this option
-                    // if a button is pressed -> do animation
-                    // then see if the option is ok!
-                    // break if final state!
                   } else {
                     // 3 options: MM, MC, CC
                     inBoatAll = [['M', 'C'], ['M', 'M'], ['C', 'C']]
@@ -275,7 +235,6 @@ export default function handleAllTransition(props, state, baseState, nextState, 
               if (pSumM+pSumC <= 2) {
                 if (pSumM+pSumC == mSumM+mSumC) {
                   if (pSumC == mSumC && pSumM == mSumM) {
-                    // WORKS JUST WITH THE NEXT STATE! LIKE IN INITIAL!
                     console.log("plusessumc: ", pSumC, " plusessumm: ", pSumM, " minusessumc: ", mSumC, " minusessumm: ", mSumM)
                     console.log("leftc: ", leftc, " leftm: ", leftm, " rightc: ", rightc, " rightm: ", rightm)
                     let hereInBoat = [], newState = state
@@ -367,16 +326,14 @@ export default function handleAllTransition(props, state, baseState, nextState, 
     options.forEach(element=>{
       console.log("("+element+")")
     })
-    makeButton(props, state, baseState, nextState, finalState, firstBoatPosition, initialState, options, vals, boatPos)
-
-    // se fac butoane pt options
-    // see which one is pressed -> make animation
-    // then verify if is eaten or final state(break)!
-    // if not, do nothing! just continue
+    var select = document.getElementById('strategy');
+    var text = select.options[select.selectedIndex].text;
+    console.log(text)
+    makeButton(props, state, baseState, nextState, finalState, firstBoatPosition, initialState, options, vals, boatPos, text)
   }
 
-function makeButton(props, state, baseState, nextState, finalState, firstBoatPosition, initialState, options, vals, boatPosition) {
-  console.log("plm", vals)
+function makeButton(props, state, baseState, nextState, finalState, firstBoatPosition, initialState, options, vals, boatPosition, strategy) {
+  console.log(vals)
   let btns = ``
   if (state == initialState) {
     let [allLeftm, allRightm, allLeftc, allRightc] = utils.verifyState(state, props.setShowAlert, props.showAlert);
@@ -386,35 +343,52 @@ function makeButton(props, state, baseState, nextState, finalState, firstBoatPos
     utils.showMC(allLeftm, allRightm, allLeftc, allRightc);
   }
   let btn = document.querySelector("#chooseOption")
+  let valueForGreedy = 0;
   for (let i = 0; i < options.length; i++) {
     window.mata = (e,val)=>{
       if (val == 0) {
       console.log("NU-I BUN SI DA ANIMATIE")
       props.setShowAlert({...props.showAlert, show:true, title:"You got eaten!",
       message:"The number of canibals on one side is bigger than the number of missionaries on one of the states! They ate you!", btnColor:"red", btnText:'OK'})
-    } else{
-      console.log("yes aici fa nu te uita")
-      let [allLeftm, allRightm, allLeftc, allRightc] = utils.verifyState(e, props.setShowAlert, props.showAlert);
-      document.querySelectorAll('rect').forEach(rect=>{
-            rect.parentNode.children[1].innerHTML = ""
-          });
-      utils.showMC(allLeftm, allRightm, allLeftc, allRightc);
-      if (e == finalState) {
-        console.log("YEY FINAL!!!!")
-        // ANIMATIE -> ASTEAPTA 2 SEC, DISPARE TOT SI APARE PT CEA DE ACUM!
-         props.setShowAlert({...props.showAlert, show:true, title:"Finshed!",
-      message:"Congrats! You just finished a full transition!", btnColor:"purple", btnText:'GREAT'})
-      } else {
-        handleAllTransition(props, e, baseState, nextState, finalState, firstBoatPosition, initialState, boatPosition)
+      } else{
+        // aici lucram si cu greedy
+        let [allLeftm, allRightm, allLeftc, allRightc] = utils.verifyState(e, props.setShowAlert, props.showAlert);
+        
+        document.querySelectorAll('rect').forEach(rect=>{
+              rect.parentNode.children[1].innerHTML = ""
+            });
+        utils.showMC(allLeftm, allRightm, allLeftc, allRightc);
+        if (e == finalState) {
+          console.log("YEY FINAL!!!!")
+          // ANIMATIE -> ASTEAPTA 2 SEC, DISPARE TOT SI APARE PT CEA DE ACUM!
+          props.setShowAlert({...props.showAlert, show:true, title:"Finshed!",
+        message:"Congrats! You just finished a full transition!", btnColor:"purple", btnText:'GREAT'})
+        } else {
+          handleAllTransition(props, e, baseState, nextState, finalState, firstBoatPosition, initialState, boatPosition)
+        }
+        
+        // ANIMATIE AICI!!!!!!!
       }
-      
-      // ANIMATIE AICI!!!!!!!
+      console.log(val, "hereeeeeeeeeeeee", e)
     }
-    console.log(val, "hereeeeeeeeeeeee", e)
-  }
-      btns += `<div><input name="same" id="${options[i]}" type='radio'
-      onclick='mata("${options[i]}", ${vals[i]})'
-      /><label for="${options[i]}">${options[i]}</label></div>`
+    if (strategy == "Greedy") {
+      if (vals[i] == 1) {
+        valueForGreedy++;
+        btns += `<div><input name="same" id="${options[i]}" type='radio'
+        onclick='mata("${options[i]}", ${vals[i]})'
+        /><label for="${options[i]}">${options[i]} - ${valueForGreedy}</label></div>`
+      } else {
+        btns += `<div><input name="same" id="${options[i]}" type='radio'
+        onclick='mata("${options[i]}", ${vals[i]})'
+        /><label for="${options[i]}">${options[i]} - 0</label></div>`
+      }
+    } else if (strategy == "Random") {
+       btns += `<div><input name="same" id="${options[i]}" type='radio'
+        onclick='mata("${options[i]}", ${vals[i]})'
+        /><label for="${options[i]}">${options[i]}</label></div>`
+    }
+    
+    
   }
   btn.innerHTML+=btns
 }

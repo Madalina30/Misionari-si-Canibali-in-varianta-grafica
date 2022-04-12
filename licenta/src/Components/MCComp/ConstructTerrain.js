@@ -39,7 +39,6 @@ export default function constructMC(){
         }else{
           rect.style.fill = "transparent"
         }
-       // then put leftm(pink), leftc(blue), rightm(pink), rightc(blue) on their sides
   
     })
   }

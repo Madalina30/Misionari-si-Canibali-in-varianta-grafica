@@ -109,7 +109,11 @@ export default function handleFinalTransition(props, state, transition, finalSta
           rect.parentNode.children[1].innerHTML = "";
       });
       utils.showMC(allLeftm, allRightm, allLeftc, allRightc);
-      props.setShowAlert({...props.showAlert, show:true, title:"Final!", message:"The animation is completed and you reached the finale! ", btnColor:"red"})
+      props.setShowAlert({...props.showAlert, show:true, title:"Final!", message:"The animation is completed and you reached the finale! ", btnColor:"red", btnText:"GREAT"})
+      document.getElementById("chooseOption").innerHTML = `<p class="select-category__txt">Stages:`
+      for (let step in steps) {
+        document.getElementById("chooseOption").innerHTML += `<p>- (${steps[step]})</p>`
+      }
 
     }
   

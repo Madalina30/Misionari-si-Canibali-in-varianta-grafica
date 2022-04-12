@@ -29,9 +29,9 @@ export default function OptionsInfo(props){
               <ul>
                 <li>Rule: nr of cannibals &lt; nr of missionaries on all sides;</li>
                 <li>You will have to complete the left form;</li>
-                <li>Pattern for State: ((m1, m2, ...), (c1, c2, ...), b), where m1, m2, ... = missionaries, c1, c2, ... = cannibals and b is the state of the boat, each with values 0 or 1;</li>
-                <li>Pattern for transition (3 options): final,initial-&gt;other_state (same format as before) or all-&gt;...</li>
                 <li>After pressing the Search button, if you entered correct data and the road can be made, you need to wait 5 seconds for the transition to be made.</li>
+                <li>Pattern for State: ((m1, m2, ...), (c1, c2, ...), b), where m1, m2, ... = missionaries, c1, c2, ... = cannibals and b is the state of the boat, each with values 0 or 1;</li>
+                <li>Pattern for transition (3 options): final,initial-&gt;other_state (same format as before) or all-&gt;TO COMPLETE + READ MORE</li>
               </ul>
            </p>}
         </div>

@@ -1,4 +1,4 @@
-export default function TopMenuSimpleRoad(props){
+export default function TopMenuSimpleRoad(){
     return(
         <div className="buttons">
             <p className="select-category__txt">Choose what you do:</p>

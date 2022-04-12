@@ -1,7 +1,7 @@
 import '../App.css';
 import {useEffect, useState} from 'react'
 import React, { Component } from 'react';
-import TopMenuSimpleRoad from './SimpleRoadComp/TopMenuBar';
+import TopMenuSimpleRoad from './MCComp/TopMenuBar';
 let isDown = false, moveStart = false, moveEnd = false;
 export default function SimpleRoad(props) {
     const [start, setStart] = useState([15, 10])

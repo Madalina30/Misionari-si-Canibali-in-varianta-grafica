@@ -28,10 +28,20 @@ export default function LeftMCTab(props){
                         <textarea id="transition" name="transition" rows="2" placeholder="write your transition here" required></textarea>
                     </div>
                     <input type="button" value="Search" id="submitUserData" onClick={()=>{
-                        console.log(55)
+                        // console.log(55)
                         props.setStare(document.getElementById("stare").value)
                         props.setTransition(document.getElementById("transition").value)
                     }}/>
+                    {/* aici o sa fie partea in care alege strategia */}
+                    <div id="strategies" style={{visibility:"hidden"}}>
+                        <label for="strategy" style={{padding:"0px 10px 0px 0px"}}>Choose a strategy:</label>
+
+                        <select name="strategy" id="strategy" required>
+                            <option value="random">Random</option>
+                            <option value="greedy">Greedy</option>
+                        </select>
+                    </div>
+                    
                 </form>
             </div>
         </>
