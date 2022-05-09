@@ -17,7 +17,7 @@ export default function OptionsInfo(props){
 
                 You are in Simple Road mode (default). Here are some instructions:
                 <ul>
-                <li>Start = green, end = red. You can move them around, but the road will be searched from start to end (SEARCH), even diagonally if it is faster;</li>
+                <li>Start = green, end = red. You can move them around, but the road will be searched from start to end (SEARCH), but just if it is a straight road between those points (example: no diagonals, no walls between them)</li>
                 <li>In the center menu, you can find explicit named buttons.</li>
                 <li>You can add walls that will block your faster route, but you can delete them (DELETE WALLS);</li>
                 <li>An animation will appear at search. Also, you can delete the road created (DELETE ROAD);</li>
