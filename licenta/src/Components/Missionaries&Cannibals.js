@@ -55,19 +55,15 @@ export default function MissionariesCannibals(props){
     )
 }
 
-
-
 function checkStateInserts(props, state, transition){
     if (state == "()" || state == "" || state == " " || state == "(())" || state == "((),())" || state == "((),(),)"){
-        // SAU DACA EXISTA DEJA WARNINGURI DE CAND SE INTRODUCE STAREA!!!!!!!!!!
         props.setShowAlert({...props.showAlert, show:true, title:"Nothing here!", message:"One of the states is kinda empty!", btnColor:"red"})
     }else{
         let newState = state.split(" ").join("")
         newState = utils.removePh(newState);
         let [leftm, rightm, leftc, rightc] = utils.verifyState(newState, props.setShowAlert, props.showAlert)
-        
         if (!leftm && !rightm & !leftc & !rightc){
-          // NU FACE NICIO SCHIMBARE
+
         } else {
             checkTranzitionInserts(props, newState, transition)
         }

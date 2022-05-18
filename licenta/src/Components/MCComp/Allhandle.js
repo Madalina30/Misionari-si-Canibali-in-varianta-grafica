@@ -4,6 +4,7 @@ const utils = new Utils();
 
 export default function handleAllTransition(props, state, baseState, nextState, finalState, firstBoatPosition, initialState, boatPos = 0){
     let [leftm, rightm, leftc, rightc] = utils.verifyState(state, props.setShowAlert, props.showAlert)
+    utils.showMC(leftm, rightm,leftc, rightc)
     let vectBaseState = baseState.split(","), vectState = state.split(","), vectNextState = nextState.split(",")
     if (vectBaseState.length == vectState.length && vectBaseState.length == vectNextState.length) {
       if (vectBaseState[0].includes("(") && vectBaseState[leftm+rightm-1].includes(")") && vectBaseState[leftm+rightm].includes("(") 
@@ -305,7 +306,8 @@ export default function handleAllTransition(props, state, baseState, nextState, 
           }
         }
       } else {
-        props.setShowAlert({...props.showAlert, show:true, title:"Not ok!", message:"Check the instruction before writing!", btnColor:"red", btnText:'OK'})
+        props.setShowAlert({...props.showAlert, show:true, title:"Not ok!", 
+        message:"Check the instruction before writing!", btnColor:"red", btnText:'OK'})
       }
     } else {
       console.log("not the same length states")
