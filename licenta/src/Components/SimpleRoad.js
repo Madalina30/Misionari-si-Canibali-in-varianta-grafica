@@ -8,8 +8,6 @@ export default function SimpleRoad(props) {
     const [finish, setFinish] = useState([25,10])
     return(
         <>
-        
-
         <svg width="100%" height="100%" className='svg-grid'>
         {props.buildGrid().map(coords=>{
             let joinedCoords = coords.join("");

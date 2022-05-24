@@ -31,8 +31,8 @@ export default function MissionariesCannibals(props){
                 let joinedCoords = coords.join("");
                 return(
                     <g key={i}>
-                        <rect x={coords[0]*30} y={coords[1]*30} i={coords[0]} j={coords[1]} width="30" height="30" r="0" rx="0" ry="0" fill="#ffffff" stroke="#000" strokeOpacity="0.2" 
-                        id ={"rect"+joinedCoords} className='click-rect' style={{fill:'transparent', cursor:'not-allowed'}}></rect>
+                        <rect x={coords[0]*30} y={coords[1]*30} i={coords[0]} j={coords[1]} width="30" height="30" r="0" rx="0" ry="0" fill="#ffffff" 
+                        stroke="#000" strokeOpacity="0.2" id ={"rect"+joinedCoords} className='click-rect' style={{fill:'transparent', cursor:'not-allowed'}}></rect>
                         <text x={coords[0]*30} y={coords[1]*30+30} font-family="Verdana" font-size="25"></text>
                     </g>
                 )
