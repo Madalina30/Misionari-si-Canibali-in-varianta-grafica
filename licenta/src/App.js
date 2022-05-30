@@ -49,7 +49,7 @@ function App() {
 
       {optionSelected==0?
       <>
-        <SimpleRoad buildGrid={buildGrid}/>
+        <SimpleRoad buildGrid={buildGrid} setShowAlert={setShowAlert} showAlert={showAlert}/>
       </>:
       <>
         <MissionariesCannibals buildGrid={buildGrid} setShowAlert={setShowAlert} showAlert={showAlert}/>

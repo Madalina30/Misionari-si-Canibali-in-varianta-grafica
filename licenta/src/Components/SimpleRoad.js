@@ -6,6 +6,7 @@ let isDown = false, moveStart = false, moveEnd = false;
 export default function SimpleRoad(props) {
     const [start, setStart] = useState([15, 10])
     const [finish, setFinish] = useState([25,10])
+
     return(
         <>
         <svg width="100%" height="100%" className='svg-grid'>
@@ -38,7 +39,7 @@ export default function SimpleRoad(props) {
           })}
         </svg>
         
-        <TopMenuSimpleRoad/>
+        <TopMenuSimpleRoad setShowAlert={props.setShowAlert} showAlert={props.showAlert}/>
 
         </>
     )
@@ -53,7 +54,8 @@ function mouseDownGrid(e) {
       moveEnd = true
     }else{
       isDown = true
-      e.target.style.fill = "plum"
+      if (!valueOfE.contains("end") || !valueOfE.contains("start"))
+        e.target.style.fill = "plum"
       console.log(e.target)
     }
   }
