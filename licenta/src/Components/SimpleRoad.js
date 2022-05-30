@@ -89,14 +89,12 @@ function mouseDownGrid(e) {
       moveStart = false
       e.target.classList.remove("start-hover")
       e.target.classList.add("start")
-      // put start on i and j
       setStart(coords)
       console.log(coords)
     } else if (moveEnd) {
       moveEnd = false
       e.target.classList.remove("end-hover")
       e.target.classList.add("end")
-      // put end on i and j
       setFinish(coords)
       console.log(coords)
     }
