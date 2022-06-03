@@ -14,7 +14,7 @@ export default function OptionsInfo(props){
             </button>
             {props.selectedOption == 0?
             <p style={{display:infoVisibility===0?"none":"block"}}>
-
+                <h1 style={{textAlign:'center', marginTop:0}}>Instructions:</h1>
                 You are in Simple Road mode (default). Here are some instructions:
                 <ul>
                 <li>Start = green, end = red. You can move them around, but the road will be searched from start to end (SEARCH), but just if it is a straight road between those points (example: no diagonals, no walls between them)</li>
@@ -25,6 +25,8 @@ export default function OptionsInfo(props){
                 </ul>
             </p>:
             <p style={{display:infoVisibility===0?"none":"block"}}>
+                <h1 style={{textAlign:'center', marginTop:0}}>Instructions:</h1>
+
               You are in M&amp;C mode. Here are some instructions:
               <ul>
                 <li>Rule: nr of cannibals &lt; nr of missionaries on all sides;</li>
